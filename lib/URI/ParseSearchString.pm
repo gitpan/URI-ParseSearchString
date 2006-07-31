@@ -16,7 +16,7 @@ URI::ParseSearchString - parse Apache refferer logs and extract search engine qu
 
 =head1 VERSION
 
-Version 0.01
+Version 0.03
 
 =cut
 
