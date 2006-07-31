@@ -1,7 +1,7 @@
 package URI::ParseSearchString;
 
 use warnings;
-use URI::split ( "uri_split" ) ;
+use URI::Split ( "uri_split" ) ;
 use URI::Escape ( "uri_unescape" ) ;
 
 require Exporter;
