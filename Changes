@@ -4,3 +4,4 @@ Revision history for URI-ParseSearchString
         First version, released on an unsuspecting world.
 0.02    Fixed a minor bug regarding URI::Split
 0.03    Renames to 0.3 to catch up with PAUSE files
+0.5     Minor changes to documentation

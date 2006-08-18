@@ -16,11 +16,11 @@ URI::ParseSearchString - parse Apache refferer logs and extract search engine qu
 
 =head1 VERSION
 
-Version 0.4
+Version 0.5
 
 =cut
 
-our $VERSION = '0.4';
+our $VERSION = '0.5';
 
 =head1 SYNOPSIS
 
@@ -138,6 +138,8 @@ Spiros Denaxas, C<< <s.denaxas at gmail.com> >>
 
 This is my first CPAN module so I encourage you to send all comments, especially bad, 
 to my email address.
+This could not have been possible without the support of my co-workers at http://nestoria.co.uk - the easiest way
+of finding UK property.
 
 =head1 SUPPORT
 
