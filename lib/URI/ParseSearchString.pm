@@ -16,11 +16,11 @@ URI::ParseSearchString - parse Apache refferer logs and extract search engine qu
 
 =head1 VERSION
 
-Version 0.5
+Version 0.6  (more fat - less healthy ingredients!)
 
 =cut
 
-our $VERSION = '0.5';
+our $VERSION = '0.6';
 
 =head1 SYNOPSIS
 
@@ -32,48 +32,97 @@ our $VERSION = '0.5';
 
 =head2 parse_search_string
 
-		This module provides a simple function to parse and extract search engine query strings. It was designed and tested having
-		Apache referrer logs in mind. It can be used for a wide number of purposes, including tracking down what keywords people use
-		on popular search engines before they land on a site. It makes use of URI::split to extract the string and URI::Escape to un-escape
-		the encoded characters in it.	Although a number of existing modules and scripts exist for this purpose,
-		the majority of them are either outdated using obsolete search strings associated with each engine.
+This module provides a simple function to parse and extract search engine query strings. It was designed and tested having
+Apache referrer logs in mind. It can be used for a wide number of purposes, including tracking down what keywords people use
+on popular search engines before they land on a site. It makes use of URI::split to extract the string and URI::Escape to un-escape
+the encoded characters in it.	Although a number of existing modules and scripts exist for this purpose,
+the majority of them are either outdated using obsolete search strings associated with each engine.
 
-		The default function exported is "parse_search_string" which accepts an unquoted referrer string as input and returns the 
-		search engine query contained within. It currently works with both escaped and un-escaped queries and will translate the search
-		terms before returning them in the latter case. The function returns undef in all other cases and errors.
+The default function exported is "parse_search_string" which accepts an unquoted referrer string as input and returns the 
+search engine query contained within. It currently works with both escaped and un-escaped queries and will translate the search
+terms before returning them in the latter case. The function returns undef in all other cases and errors.
 
-		for example: 
+for example: 
 
-				$string = parse_search_string('http://www.google.com/search?hl=en&q=a+simple+test&btnG=Google+Search') ;
+C<$string = parse_search_string('http://www.google.com/search?hl=en&q=a+simple+test&btnG=Google+Search') ;>
 
-		would return 'a simple test' 
+would return I<'a simple test'>
 
-		whereas
+whereas
 
-				$string = parse_search_string('http://www.mamma.com/Mamma?utfout=1&qtype=0&query=a+more%21+complex_+search%24&Submit=%C2%A0%C2%A0Search%C2%A0%C2%A0') ;
+C<$string = parse_search_string('http://www.mamma.com/Mamma?utfout=1&qtype=0&query=a+more%21+complex_+search%24&Submit=%C2%A0%C2%A0Search%C2%A0%C2%A0') ;>
 
-		would return 'a more! complex_ search$' 
+would return I<'a more! complex_ search$'> 
 
-		Currently, the search engines supported include Yahoo, MSN, Google, Tiscali, Netscape, Blueyonder, Mamma, Hotbot, AllTheWeb,
-		Lycos and Mirago. I would be glad to add support for any additional search engines you might come across so please feel free to email me.
+Currently supported search engines include:
 
-		That is all, nothing fancy.
+=over
+
+=item *
+B<AOL (UK)>
+
+=item *
+B<AllTheWeb>
+
+=item *
+B<Blueyonder (UK)>
+
+=item * 
+B<Fireball (DE)>
+
+=item *
+B<Google>
+
+=item *
+B<Google Blog Search>
+
+=item *
+B<HotBot>
+
+=item * 
+B<Ice Rocket Blog Search>
+
+=item *
+B<Lycos>
+
+=item *
+B<Mamma>
+
+=item *
+B<Mirago (UK)>
+
+=item *
+B<MSN>
+
+=item *
+B<Netscape>
+
+=item *
+B<Tiscali (UK)>
+
+=item *
+B<Web.de (DE)>
+
+=item *
+B<Yahoo>
+
+=back
 
 =cut
 
 sub parse_search_string {
-	
 	my $string = shift ;
 	return unless (defined $string ) ; 
-	
+
 	my $query_string ;
+
 	my ($scheme, $auth, $path, $query, $frag) = URI::Split::uri_split($string);
 	undef $scheme; undef  $path ; undef  $frag ;
 	return unless (defined $auth && defined $query) ;
 	
-	# parse Google, MSN, Altavista, Blueyonder, and AllTheWeb search strings.
-	if ($auth =~ m/^w{1,}.google\./i || $auth =~ m/.altavista./i || $auth =~ m/alltheweb.com/i || $auth =~ m/^search.msn./i 
-	    || $auth =~ m/.ask.com/i || $auth =~ m/blueyonder.co.uk/i ) {
+	# parse Google, MSN, Altavista, Blueyonder, AllTheWeb and Ice Rocket search strings.
+	if ($auth =~ m/(^w{1,}.google\.|.altavista.|alltheweb.com|^search.msn.co|.ask.com)/i 
+	|| $auth =~ m/(blueyonder.co.uk|blogs.icerocket.com|blogsearch.google.com)/i ) {
 		$query =~ m/q=([^&]+)/i ;
 	    $query_string = $1 ;
 	    $query_string =~ s/\+/ /g ;
@@ -81,8 +130,8 @@ sub parse_search_string {
 	    return $query_string ;
 	}
 	
-	# parse Lycos and HotBot search strings.
-	elsif ($auth =~ m/search.lycos./i || $auth =~ m/.hotbot.co/i ) {
+	# parse Lycos, HotBot and Fireball.de search strings.
+	elsif ($auth =~ m/(search.lycos.|hotbot.co|suche.fireball.de)/i ) {
 		$query =~ m/query=([^&]+)/i ;
 	    $query_string = $1 ;
 	    $query_string =~ s/\+/ /g ;
@@ -117,8 +166,17 @@ sub parse_search_string {
 	    return $query_string ;
 	}
 	
+	# parse Web.de search string.
+	elsif ($auth =~ m/suche.web.de/i ) {
+		$query =~ m/su=([^&]+)/i ;
+	    $query_string = $1 ;
+	    $query_string =~ s/\+/ /g ;
+	    $query_string = uri_unescape($query_string);
+	    return $query_string ;
+	}
+
 	# parse Mamma, AOL UK, Tiscali  search strings.
-	elsif ($auth =~ m/mamma.com/i || $auth =~ m/search.aol.co.uk/i || $auth =~ m/tiscali.co.uk/i ) {
+	elsif ($auth =~ m/(mamma.com|search.aol.co.uk|tiscali.co.uk)/i ) {
 		$query =~ m/query=([^&]+)/i ;
 	    $query_string = $1 ;
 	    $query_string =~ s/\+/ /g ;
@@ -138,14 +196,14 @@ Spiros Denaxas, C<< <s.denaxas at gmail.com> >>
 
 This is my first CPAN module so I encourage you to send all comments, especially bad, 
 to my email address.
-This could not have been possible without the support of my co-workers at http://nestoria.co.uk - the easiest way
-of finding UK property.
+This could not have been possible without the support of my co-workers at 
+http://nestoria.co.uk - the easiest way of finding UK property.
 
 =head1 SUPPORT
 
 For more information, you could also visit my blog: 
 
-		http://idaru.blogspot.com
+http://idaru.blogspot.com
 
 =over 4
 

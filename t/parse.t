@@ -4,6 +4,7 @@ use strict;
 use warnings ;
 use Test::More 'no_plan'  ;
 use Test::NoWarnings      ;
+
 use URI::ParseSearchString ;
 
 my $raa_simpleTests = [
@@ -28,7 +29,10 @@ my $raa_simpleTests = [
 	['http://search.aol.co.uk/web?invocationType=ns_uk&query=a%20simple%20test',                               'AOL UK simple search'             ],
 	['http://www.tiscali.co.uk/search/results.php?section=&from=&query=a+simple+test',                         'Tiscali simple search'            ],
 	['http://www.mamma.com/Mamma?utfout=1&qtype=0&query=a+simple+test&Submit=%C2%A0%C2%A0Search%C2%A0%C2%A0',  'Mamma.com simple search'          ],
-
+	['http://blogs.icerocket.com/search?q=a+simple+test',																											 'Icerocket Blogs simple search'    ], 
+	['http://blogsearch.google.com/blogsearch?hl=en&ie=UTF-8&q=a+simple+test&btnG=Search+Blogs',							 'Google Blogs simple search'					],
+	['http://suche.fireball.de/cgi-bin/pursuit?query=a+simple+test&x=0&y=0&cat=fb_loc&enc=utf-8', 						 'Fireball.de simple search'          ],
+	['http://suche.web.de/search/web/?allparams=&smode=&su=a+simple+test&webRb=de', 													 'Web.de simple search'								],
 ] ;
 
 my $raa_complexTests = [
@@ -55,6 +59,8 @@ my $raa_complexTests = [
 	['http://www.mamma.com/Mamma?utfout=1&qtype=0&query=a+more%21+complex_+search%24&Submit=%C2%A0%C2%A0Search%C2%A0%C2%A0', 'Mamma.com complex search'],
 	
 ] ;
+
+
 
 
 diag "\nTesting simple queries\n\n" ;
