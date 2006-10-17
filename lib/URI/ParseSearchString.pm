@@ -16,11 +16,11 @@ URI::ParseSearchString - parse Apache refferer logs and extract search engine qu
 
 =head1 VERSION
 
-Version 0.6  (more fat - less healthy ingredients!)
+Version 0.7  (more fat - less healthy ingredients!)
 
 =cut
 
-our $VERSION = '0.6';
+our $VERSION = '0.7';
 
 =head1 SYNOPSIS
 
@@ -67,6 +67,9 @@ B<AllTheWeb>
 =item *
 B<Blueyonder (UK)>
 
+=item *
+B<Feedster Blog Search>
+
 =item * 
 B<Fireball (DE)>
 
@@ -98,6 +101,9 @@ B<MSN>
 B<Netscape>
 
 =item *
+B<Technorati Blog Search>
+
+=item *
 B<Tiscali (UK)>
 
 =item *
@@ -117,8 +123,22 @@ sub parse_search_string {
 	my $query_string ;
 
 	my ($scheme, $auth, $path, $query, $frag) = URI::Split::uri_split($string);
-	undef $scheme; undef  $path ; undef  $frag ;
-	return unless (defined $auth && defined $query) ;
+	undef $scheme; undef  $frag ;
+	
+	return unless defined $auth ;
+
+	# parse technorati and feedster search strings.
+	if ($auth =~ m/(technorati|feedster)\.com/i ) {
+		$path =~ s/\/search\///g ;
+		my $query_string = $path ;
+		$query_string = uri_unescape($query_string);
+		undef $path ;
+		$query_string =~ s/\+/ /g ;
+		return $query_string ;
+	}
+	
+	return unless defined $query ;
+	undef $path ;
 	
 	# parse Google, MSN, Altavista, Blueyonder, AllTheWeb and Ice Rocket search strings.
 	if ($auth =~ m/(^w{1,}.google\.|.altavista.|alltheweb.com|^search.msn.co|.ask.com)/i 
@@ -196,6 +216,7 @@ Spiros Denaxas, C<< <s.denaxas at gmail.com> >>
 
 This is my first CPAN module so I encourage you to send all comments, especially bad, 
 to my email address.
+
 This could not have been possible without the support of my co-workers at 
 http://nestoria.co.uk - the easiest way of finding UK property.
 
@@ -203,7 +224,7 @@ http://nestoria.co.uk - the easiest way of finding UK property.
 
 For more information, you could also visit my blog: 
 
-http://idaru.blogspot.com
+	http://idaru.blogspot.com
 
 =over 4
 

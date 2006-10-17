@@ -33,6 +33,8 @@ my $raa_simpleTests = [
 	['http://blogsearch.google.com/blogsearch?hl=en&ie=UTF-8&q=a+simple+test&btnG=Search+Blogs',							 'Google Blogs simple search'					],
 	['http://suche.fireball.de/cgi-bin/pursuit?query=a+simple+test&x=0&y=0&cat=fb_loc&enc=utf-8', 						 'Fireball.de simple search'          ],
 	['http://suche.web.de/search/web/?allparams=&smode=&su=a+simple+test&webRb=de', 													 'Web.de simple search'								],
+	['http://www.technorati.com/search/a%20simple%20test',                                                      'Technorati simple search' ],
+	['http://www.feedster.com/search/a%20simple%20test',                                                        'Feedster.com simple search'],
 ] ;
 
 my $raa_complexTests = [

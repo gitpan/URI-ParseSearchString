@@ -6,3 +6,4 @@ Revision history for URI-ParseSearchString
 0.03    Renames to 0.3 to catch up with PAUSE files
 0.5     Minor changes to documentation
 0.6     Cleaned up code, added some search engines, fixed POD documentation.
+0.7     Added Technorati and Feedster blog search engines support
