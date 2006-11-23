@@ -9,3 +9,4 @@ Revision history for URI-ParseSearchString
 0.7     Added Technorati and Feedster blog search engines support
 0.8     Kwalitee fixes
 0.9     Updated META.yml specs
+0.10    Added Froogle, thanks Brian !

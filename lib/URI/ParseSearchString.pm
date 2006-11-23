@@ -16,11 +16,11 @@ URI::ParseSearchString - parse Apache refferer logs and extract search engine qu
 
 =head1 VERSION
 
-Version 0.9  (more fat - less healthy ingredients!)
+Version 0.10  (more fat - less healthy ingredients!)
 
 =cut
 
-our $VERSION = '0.9';
+our $VERSION = '0.10';
 
 =head1 SYNOPSIS
 
@@ -72,6 +72,12 @@ B<Feedster Blog Search>
 
 =item * 
 B<Fireball (DE)>
+
+=item *
+B<Froogle>
+
+=item *
+B<Froogle UK>
 
 =item *
 B<Google>
@@ -142,7 +148,7 @@ sub parse_search_string {
 	
 	# parse Google, MSN, Altavista, Blueyonder, AllTheWeb and Ice Rocket search strings.
 	if ($auth =~ m/(^w{1,}.google\.|.altavista.|alltheweb.com|^search.msn.co|.ask.com)/i 
-	|| $auth =~ m/(blueyonder.co.uk|blogs.icerocket.com|blogsearch.google.com)/i ) {
+	|| $auth =~ m/(blueyonder.co.uk|blogs.icerocket.com|blogsearch.google.com|froogle.google.co)/i ) {
 		$query =~ m/q=([^&]+)/i ;
 	    $query_string = $1 ;
 	    $query_string =~ s/\+/ /g ;
