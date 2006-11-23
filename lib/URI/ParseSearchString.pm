@@ -16,11 +16,11 @@ URI::ParseSearchString - parse Apache refferer logs and extract search engine qu
 
 =head1 VERSION
 
-Version 0.10  (more fat - less healthy ingredients!)
+Version 1.0  (more fat - less healthy ingredients!)
 
 =cut
 
-our $VERSION = '0.10';
+our $VERSION = '1.0';
 
 =head1 SYNOPSIS
 

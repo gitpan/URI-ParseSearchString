@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:                URI-ParseSearchString
-version:             0.10
+version:             1.0
 abstract:            parse Apache refferer logs and extract search engine query strings.
 license:             ~
 generated_by:        ExtUtils::MakeMaker version 6.31
