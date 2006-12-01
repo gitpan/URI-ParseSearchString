@@ -8,6 +8,7 @@ WriteMakefile(
     VERSION_FROM        => 'lib/URI/ParseSearchString.pm',
     ABSTRACT_FROM       => 'lib/URI/ParseSearchString.pm',
     PL_FILES            => {},
+    LICENSE             => 'perl',
     PREREQ_PM => {
         'Test::More' => 0,
     },

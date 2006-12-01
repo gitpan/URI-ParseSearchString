@@ -16,11 +16,11 @@ URI::ParseSearchString - parse Apache refferer logs and extract search engine qu
 
 =head1 VERSION
 
-Version 1.0  (more fat - less healthy ingredients!)
+Version 1.1  (more fat - less healthy ingredients!)
 
 =cut
 
-our $VERSION = '1.0';
+our $VERSION = '1.1';
 
 =head1 SYNOPSIS
 
@@ -146,8 +146,17 @@ sub parse_search_string {
 	return unless defined $query ;
 	undef $path ;
 	
-	# parse Google, MSN, Altavista, Blueyonder, AllTheWeb and Ice Rocket search strings.
-	if ($auth =~ m/(^w{1,}.google\.|.altavista.|alltheweb.com|^search.msn.co|.ask.com)/i 
+	# parse Google
+	if ($auth =~ m/^w{1,}.google\./i ){
+	  	$query =~ m/&q=([^&]+)/i ;
+  	    $query_string = $1 ;
+  	    $query_string =~ s/\+/ /g ;
+  	    $query_string = uri_unescape($query_string);
+  	    return $query_string ;
+  }
+	
+	# parse MSN, Altavista, Blueyonder, AllTheWeb and Ice Rocket search strings.
+	if ($auth =~ m/(.altavista.|alltheweb.com|^search.msn.co|.ask.com)/i 
 	|| $auth =~ m/(blueyonder.co.uk|blogs.icerocket.com|blogsearch.google.com|froogle.google.co)/i ) {
 		$query =~ m/q=([^&]+)/i ;
 	    $query_string = $1 ;
