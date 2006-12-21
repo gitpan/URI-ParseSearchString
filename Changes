@@ -13,4 +13,5 @@ Revision history for URI-ParseSearchString
 1.0     First normal version.
 1.1     Fixed a really obscure bug regarding some Google string, thanks Ed !
 1.2     Fixed LISENCE , finally.
-1.3     Fixed yet another weird error with Google. 
+1.3     Fixed yet another weird error with Google.
+1.4     Fixed a prereq 
