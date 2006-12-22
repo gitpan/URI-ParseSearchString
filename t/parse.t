@@ -63,8 +63,14 @@ my $raa_complexTests = [
 	['http://www.mamma.com/Mamma?utfout=1&qtype=0&query=a+more%21+complex_+search%24&Submit=%C2%A0%C2%A0Search%C2%A0%C2%A0', 'Mamma.com complex search'],
 ] ;
 
-
-
+my $ra_nowarnings = [
+  'http://www.google.com/reader/view/',
+  'http://www.google.co.uk/',
+  'http://www.googlesyndicatedsearch.com/u/huddersfield?hl=en&lr=&ie=ISO-8859-1&domains=www.hud.ac.uk&q=property%2Btong%2C+bradford&btnG=Search&sitesearch=',
+  'http://www.google.com/notebook/fullpage',
+  'http://intranet/WorkSite/scripts/redirector.aspx?url=http%3A//www.google.co.uk',
+  'http://www.googlesyndicatedsearch.com/u/huddersfield?hl=en&lr=&ie=ISO-8859-1&domains=www.hud.ac.uk&q=property%2Btong%2C+bradford&btnG=Search&sitesearch=',
+] ;
 
 diag "\nTesting simple queries\n\n" ;
 foreach (@$raa_simpleTests) {
@@ -78,7 +84,14 @@ foreach (@$raa_complexTests) {
 
 }
 
+diag "\nMaking sure no warnings get issues from weird Google\n\n" ;
+foreach (@$ra_nowarnings) {
+  is ( parse_search_string($_), undef, 'no warnings test' ) ;
+}
+
 diag "\nTesting for akward situations\n\n" ;
 is ( parse_search_string('http://googlemapsmania.blogspot.com/'), undef, 'Google-esque sites do not go through') ;
 is ( parse_search_string('-------------------------'), undef, 'Works with bad input') ;
 is ( parse_search_string(''), undef, 'Works with no input') ;
+
+
