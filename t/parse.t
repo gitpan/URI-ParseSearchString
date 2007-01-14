@@ -35,8 +35,7 @@ my $raa_simpleTests = [
 	['http://suche.web.de/search/web/?allparams=&smode=&su=a+simple+test&webRb=de', 													 'Web.de simple search'								],
 	['http://www.technorati.com/search/a%20simple%20test',                                                      'Technorati simple search' ],
 	['http://www.feedster.com/search/a%20simple%20test',                                                        'Feedster.com simple search'],
-  ['http://www.google.co.uk/search?sourceid=navclient&aq=t&ie=UTF-8&rls=DVXA,DVXA:2006-32,DVXA:en&q=a+simple+test', 'Google weird search']
-	
+  ['http://www.google.co.uk/search?sourceid=navclient&aq=t&ie=UTF-8&rls=DVXA,DVXA:2006-32,DVXA:en&q=a+simple+test', 'Google weird search'],
 ] ;
 
 my $raa_complexTests = [
@@ -93,5 +92,5 @@ diag "\nTesting for akward situations\n\n" ;
 is ( parse_search_string('http://googlemapsmania.blogspot.com/'), undef, 'Google-esque sites do not go through') ;
 is ( parse_search_string('-------------------------'), undef, 'Works with bad input') ;
 is ( parse_search_string(''), undef, 'Works with no input') ;
-
+is ( parse_search_string('http://www.google.co.uk/search?q=%22The+Berwick+Inn%22+Sussex&hl=en'), '"The Berwick Inn" Sussex', 'proper escaping') ;
 

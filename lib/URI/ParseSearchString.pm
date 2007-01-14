@@ -16,11 +16,11 @@ URI::ParseSearchString - parse Apache refferer logs and extract search engine qu
 
 =head1 VERSION
 
-Version 1.5  (more fat - less healthy ingredients!)
+Version 1.6  (more fat - less healthy ingredients!)
 
 =cut
 
-our $VERSION = '1.5';
+our $VERSION = '1.6';
 
 =head1 SYNOPSIS
 
@@ -148,7 +148,7 @@ sub parse_search_string {
 	
 	# parse Google
 	if ( ($auth =~ m/^www.google\./i) ) {
-	  	$query =~ m/\&q=([^&]+)/i || m/q=([^&]+)/i ;
+	  	$query =~ m/\&q=([^&]+)/i || $query =~ m/q=([^&]+)/i ; ;
 	  	  return unless defined $1 ;
   	    $query_string = $1 ;
   	    $query_string =~ s/\+/ /g ;

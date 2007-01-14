@@ -17,3 +17,4 @@ Revision history for URI-ParseSearchString
 1.4     Fixed a prereq 
 1.5     Fixed yet another (harmless) error when matching Google strings that cannot be parsed.
         Also added a number of tests that use the no warnings test to make sure.
+1.6     Fixed yet another bug with matching Google URL's. Thanks mtm ! 
