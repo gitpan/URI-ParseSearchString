@@ -41,7 +41,11 @@ my $raa_simpleTests = [
   ['http://search.bbc.co.uk/cgi-bin/search/results.pl?tab=web&go=homepage&q=a+simple+test&Search.x=0&Search.y=0&Search=Search&scope=all', 'BBC Google search'],
   ['http://search.live.com/results.aspx?q=a+simple+test&mkt=en-us&FORM=LVSP&go.x=0&go.y=0&go=Search', 'MS Live'],
   ['http://search.mywebsearch.com/mywebsearch/AJmain.jhtml?searchfor=a+simple+test', 'MyWebSearch.com'],
-  ['http://www.megasearching.net/m/search.aspx?s=a+simple+test&mkt=&orig=1', 'Megasearch']
+  ['http://www.megasearching.net/m/search.aspx?s=a+simple+test&mkt=&orig=1', 'Megasearch'],
+  ['http://www.blueyonder.co.uk/blueyonder/searches/search.jsp?q=a+simple+test&cr=&sitesearch=&x=0&y=0', 'Blueyonder search'],
+  ['http://search.ntlworld.com/ntlworld/search.php?q=a+simple+test&cr=&x=0&y=0', 'NTLworld search'],
+  ['http://search.orange.co.uk/all?p=_searchbox&pt=resultgo&brand=ouk&tab=web&q=a+simple+test', 'Orange.co.uk'],
+  
   
 ] ;
 
