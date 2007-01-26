@@ -16,11 +16,11 @@ URI::ParseSearchString - parse Apache refferer logs and extract search engine qu
 
 =head1 VERSION
 
-Version 1.6  (more fat - less healthy ingredients!)
+Version 1.7  (more fat - less healthy ingredients!)
 
 =cut
 
-our $VERSION = '1.6';
+our $VERSION = '1.7';
 
 =head1 SYNOPSIS
 
@@ -65,7 +65,13 @@ B<AOL (UK)>
 B<AllTheWeb>
 
 =item *
+B<ASK.com>
+
+=item *
 B<Blueyonder (UK)>
+
+=item *
+B<BBC search>
 
 =item *
 B<Feedster Blog Search>
@@ -98,16 +104,28 @@ B<Lycos>
 B<Mamma>
 
 =item *
+B<Megasearching.net>
+
+=item *
 B<Mirago (UK)>
 
 =item *
+B<MyWebSearch.com>
+
+=item *
 B<MSN>
+
+=item *
+B<Microsoft live.com>
 
 =item *
 B<Netscape>
 
 =item *
 B<Technorati Blog Search>
+
+=item * 
+B<Tesco Google search>
 
 =item *
 B<Tiscali (UK)>
@@ -155,10 +173,10 @@ sub parse_search_string {
   	    $query_string = uri_unescape($query_string);
   	    return $query_string ;
   }
-	
-	# parse MSN, Altavista, Blueyonder, AllTheWeb and Ice Rocket search strings.
-	if ($auth =~ m/(.altavista.|alltheweb.com|^search.msn.co|.ask.com)/i 
-	|| $auth =~ m/(blueyonder.co.uk|blogs.icerocket.com|blogsearch.google.com|froogle.google.co)/i ) {
+  	
+	# parse MSN, Altavista, Blueyonder, AllTheWeb, Tesco and Ice Rocket search strings.
+	if ($auth =~ m/(.altavista.|alltheweb.com|^search.msn.co|.ask.com|search.bbc.co.uk|search.live.com)/i 
+	|| $auth =~ m/(blueyonder.co.uk|blogs.icerocket.com|blogsearch.google.com|froogle.google.co|tesco.net|gps.virgin.net)/i ) {
 		$query =~ m/q=([^&]+)/i ;
 	    $query_string = $1 ;
 	    $query_string =~ s/\+/ /g ;
@@ -175,9 +193,27 @@ sub parse_search_string {
 	    return $query_string ;
 	}
 	
+	# parse mywebsearch.com 
+	elsif ($auth =~ m/(search.mywebsearch.com)/i ) {
+		$query =~ m/searchfor=([^&]+)/i ;
+	    $query_string = $1 ;
+	    $query_string =~ s/\+/ /g ;
+	    $query_string = uri_unescape($query_string);
+	    return $query_string ;
+	}
+	
 	# parse Yahoo search strings.
 	elsif ($auth =~ m/search.yahoo/i) {
 		$query =~ m/p=([^&]+)/i ;
+	    $query_string = $1 ;
+	    $query_string =~ s/\+/ /g ;
+	    $query_string = uri_unescape($query_string);
+	    return $query_string ;
+	}
+	
+	# parse megasearching.net
+	elsif ($auth =~ m/megasearching.net/i) {
+		$query =~ m/s=([^&]+)/i ;
 	    $query_string = $1 ;
 	    $query_string =~ s/\+/ /g ;
 	    $query_string = uri_unescape($query_string);

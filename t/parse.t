@@ -36,6 +36,13 @@ my $raa_simpleTests = [
 	['http://www.technorati.com/search/a%20simple%20test',                                                      'Technorati simple search' ],
 	['http://www.feedster.com/search/a%20simple%20test',                                                        'Feedster.com simple search'],
   ['http://www.google.co.uk/search?sourceid=navclient&aq=t&ie=UTF-8&rls=DVXA,DVXA:2006-32,DVXA:en&q=a+simple+test', 'Google weird search'],
+  ['http://www.tesco.net/google/searchresults.asp?q=a+simple+test&cr=', 'Tesco.net Google search'],
+  ['http://gps.virgin.net/search/sitesearch?submit.x=1&start=0&format=1&num=10&restrict=site&sitefilter=site%2Fsite_filter.hts&siteresults=site%2Fsite_results.hts&sitescorethreshold=28&q=a+simple+test&scope=UK&x=0&y=0', 'Virgin.net search'],
+  ['http://search.bbc.co.uk/cgi-bin/search/results.pl?tab=web&go=homepage&q=a+simple+test&Search.x=0&Search.y=0&Search=Search&scope=all', 'BBC Google search'],
+  ['http://search.live.com/results.aspx?q=a+simple+test&mkt=en-us&FORM=LVSP&go.x=0&go.y=0&go=Search', 'MS Live'],
+  ['http://search.mywebsearch.com/mywebsearch/AJmain.jhtml?searchfor=a+simple+test', 'MyWebSearch.com'],
+  ['http://www.megasearching.net/m/search.aspx?s=a+simple+test&mkt=&orig=1', 'Megasearch']
+  
 ] ;
 
 my $raa_complexTests = [
