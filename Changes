@@ -20,3 +20,5 @@ Revision history for URI-ParseSearchString
 1.6     Fixed yet another bug with matching Google URL's. Thanks mtm ! 
 1.7     Added support for Megasearching.net , MS's live.com, tesco.net, search.bbc.co.uk, mywebsearch.com and Virgin.net search.
 1.8     Added Orange, NTLworld.
+1.9     Major revamp. New function added to detect search the search engine used. Also added two
+        additional search engines. Now using objects.

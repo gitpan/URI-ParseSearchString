@@ -4,49 +4,53 @@ use strict;
 use warnings ;
 use Test::More 'no_plan'  ;
 use Test::NoWarnings      ;
+use Data::Dumper ;
+
 
 use URI::ParseSearchString ;
 
+my $obj = new URI::ParseSearchString() ;
+
 my $raa_simpleTests = [
 
-	['http://www.google.com/search?hl=en&q=a+simple+test&btnG=Google+Search',                                  'Google.com simple search'         ],
-	['http://www.google.co.uk/search?hl=en&q=a+simple+test&btnG=Google+Search&meta=',                          'Google.co.uk simple search'       ],
-	['http://www.google.co.jp/search?hl=ja&q=a+simple+test&btnG=Google+%E6%A4%9C%E7%B4%A2&lr=',                'Google.jp encoding simple search' ],
-	['http://search.msn.co.uk/results.aspx?q=a+simple+test&geovar=56&FORM=REDIR',                              'MSN.co.uk simple search'          ],
-	['http://search.msn.com/results.aspx?q=a+simple+test&geovar=56&FORM=REDIR',                                'MSN.com simple search'            ],
-	['http://www.altavista.com/web/results?itag=ody&q=a+simple+test&kgs=1&kls=0',                              'Altavista.com simple search'      ],
-	['http://uk.altavista.com/web/results?itag=ody&q=a+simple+test&kgs=1&kls=0',                               'Altavista.co.uk simple search'    ],
-	['http://www.blueyonder.co.uk/blueyonder/searches/search.jsp?q=a+simple+test&cr=&sitesearch=&x=0&y=0',     'Blueyonder.co.uk simple search'   ],
-	['http://www.alltheweb.com/search?cat=web&cs=iso88591&q=a+simple+test&rys=0&itag=crv&_sb_lang=pref',       'Alltheweb.com simple search'      ],
-	['http://search.lycos.com/?query=a+simple+test&x=0&y=0',                                                   'Lycos.com simple search'          ],	
-	['http://search.lycos.co.uk/cgi-bin/pursuit?query=a+simple+test&enc=utf-8&cat=slim_loc&sc=blue',           'Lycos.co.uk simple search'        ],
-	['http://www.hotbot.com/index.php?query=a+simple+test&ps=&loc=searchbox&tab=web&mode=search&currProv=msn', 'HotBot.com simple search'         ],
-	['http://search.yahoo.com/search?p=a+simple+test&fr=FP-tab-web-t400&toggle=1&cop=&ei=UTF-8',               'Yahoo.com simple search'          ],
-	['http://uk.search.yahoo.com/search?p=a+simple+test&fr=FP-tab-web-t340&ei=UTF-8&meta=vc%3D',               'Yahoo.co.uk simple search'        ],
-	['http://uk.ask.com/web?q=a+simple+test&qsrc=0&o=0&l=dir&dm=all',                                          'Ask.com simple search'            ],
-	['http://www.mirago.co.uk/scripts/qhandler.aspx?qry=a+simple+test&x=0&y=0',                                'Mirago simple search'             ],
-	['http://www.netscape.com/search/?s=a+simple+test',                                                        'Netscape.com simple search'       ],
-	['http://search.aol.co.uk/web?invocationType=ns_uk&query=a%20simple%20test',                               'AOL UK simple search'             ],
-	['http://www.tiscali.co.uk/search/results.php?section=&from=&query=a+simple+test',                         'Tiscali simple search'            ],
-	['http://www.mamma.com/Mamma?utfout=1&qtype=0&query=a+simple+test&Submit=%C2%A0%C2%A0Search%C2%A0%C2%A0',  'Mamma.com simple search'          ],
-	['http://blogs.icerocket.com/search?q=a+simple+test',																											 'Icerocket Blogs simple search'    ], 
-	['http://blogsearch.google.com/blogsearch?hl=en&ie=UTF-8&q=a+simple+test&btnG=Search+Blogs',							 'Google Blogs simple search'					],
-	['http://suche.fireball.de/cgi-bin/pursuit?query=a+simple+test&x=0&y=0&cat=fb_loc&enc=utf-8', 						 'Fireball.de simple search'          ],
-	['http://suche.web.de/search/web/?allparams=&smode=&su=a+simple+test&webRb=de', 													 'Web.de simple search'								],
-	['http://www.technorati.com/search/a%20simple%20test',                                                      'Technorati simple search' ],
-	['http://www.feedster.com/search/a%20simple%20test',                                                        'Feedster.com simple search'],
-  ['http://www.google.co.uk/search?sourceid=navclient&aq=t&ie=UTF-8&rls=DVXA,DVXA:2006-32,DVXA:en&q=a+simple+test', 'Google weird search'],
-  ['http://www.tesco.net/google/searchresults.asp?q=a+simple+test&cr=', 'Tesco.net Google search'],
-  ['http://gps.virgin.net/search/sitesearch?submit.x=1&start=0&format=1&num=10&restrict=site&sitefilter=site%2Fsite_filter.hts&siteresults=site%2Fsite_results.hts&sitescorethreshold=28&q=a+simple+test&scope=UK&x=0&y=0', 'Virgin.net search'],
-  ['http://search.bbc.co.uk/cgi-bin/search/results.pl?tab=web&go=homepage&q=a+simple+test&Search.x=0&Search.y=0&Search=Search&scope=all', 'BBC Google search'],
-  ['http://search.live.com/results.aspx?q=a+simple+test&mkt=en-us&FORM=LVSP&go.x=0&go.y=0&go=Search', 'MS Live'],
-  ['http://search.mywebsearch.com/mywebsearch/AJmain.jhtml?searchfor=a+simple+test', 'MyWebSearch.com'],
-  ['http://www.megasearching.net/m/search.aspx?s=a+simple+test&mkt=&orig=1', 'Megasearch'],
-  ['http://www.blueyonder.co.uk/blueyonder/searches/search.jsp?q=a+simple+test&cr=&sitesearch=&x=0&y=0', 'Blueyonder search'],
-  ['http://search.ntlworld.com/ntlworld/search.php?q=a+simple+test&cr=&x=0&y=0', 'NTLworld search'],
-  ['http://search.orange.co.uk/all?p=_searchbox&pt=resultgo&brand=ouk&tab=web&q=a+simple+test', 'Orange.co.uk'],
-  
-  
+	['http://www.google.com/search?hl=en&q=a+simple+test&btnG=Google+Search',                                  'Google.com simple search', 'google.com'         ],
+	['http://www.google.co.uk/search?hl=en&q=a+simple+test&btnG=Google+Search&meta=',                          'Google.co.uk simple search', 'google.co.uk'       ],
+	['http://www.google.co.jp/search?hl=ja&q=a+simple+test&btnG=Google+%E6%A4%9C%E7%B4%A2&lr=',                'Google.jp encoding simple search', 'google.co.jp' ],
+	['http://search.msn.co.uk/results.aspx?q=a+simple+test&geovar=56&FORM=REDIR',                              'MSN.co.uk simple search', 'search.msn.co.uk'          ],
+	['http://search.msn.com/results.aspx?q=a+simple+test&geovar=56&FORM=REDIR',                                'MSN.com simple search', 'search.msn.com'          ],
+	['http://www.altavista.com/web/results?itag=ody&q=a+simple+test&kgs=1&kls=0',                              'Altavista.com simple search', 'altavista.com'      ],
+	['http://uk.altavista.com/web/results?itag=ody&q=a+simple+test&kgs=1&kls=0',                               'Altavista.co.uk simple search', 'uk.altavista.com'    ],
+	['http://www.blueyonder.co.uk/blueyonder/searches/search.jsp?q=a+simple+test&cr=&sitesearch=&x=0&y=0',     'Blueyonder.co.uk simple search', 'blueyonder.co.uk'   ],
+	['http://www.alltheweb.com/search?cat=web&cs=iso88591&q=a+simple+test&rys=0&itag=crv&_sb_lang=pref',       'Alltheweb.com simple search', 'alltheweb.com'      ],
+	['http://search.lycos.com/?query=a+simple+test&x=0&y=0',                                                   'Lycos.com simple search', 'search.lycos.com'          ],	
+	['http://search.lycos.co.uk/cgi-bin/pursuit?query=a+simple+test&enc=utf-8&cat=slim_loc&sc=blue',           'Lycos.co.uk simple search', 'search.lycos.co.uk'        ],
+	['http://www.hotbot.com/index.php?query=a+simple+test&ps=&loc=searchbox&tab=web&mode=search&currProv=msn', 'HotBot.com simple search', 'hotbot.com'         ],
+	['http://search.yahoo.com/search?p=a+simple+test&fr=FP-tab-web-t400&toggle=1&cop=&ei=UTF-8',               'Yahoo.com simple search', 'search.yahoo.com'          ],
+	['http://uk.search.yahoo.com/search?p=a+simple+test&fr=FP-tab-web-t340&ei=UTF-8&meta=vc%3D',               'Yahoo.co.uk simple search', 'uk.search.yahoo.com'        ],
+	['http://uk.ask.com/web?q=a+simple+test&qsrc=0&o=0&l=dir&dm=all',                                          'Ask.com simple search', 'uk.ask.com'            ],
+	['http://www.mirago.co.uk/scripts/qhandler.aspx?qry=a+simple+test&x=0&y=0',                                'Mirago simple search', 'mirago.co.uk'             ],
+	['http://www.netscape.com/search/?s=a+simple+test',                                                        'Netscape.com simple search', 'netscape.com'        ],
+	['http://search.aol.co.uk/web?invocationType=ns_uk&query=a%20simple%20test',                               'AOL UK simple search', 'search.aol.co.uk'             ],
+	['http://www.tiscali.co.uk/search/results.php?section=&from=&query=a+simple+test',                         'Tiscali simple search', 'tiscali.co.uk'            ],
+	['http://www.mamma.com/Mamma?utfout=1&qtype=0&query=a+simple+test&Submit=%C2%A0%C2%A0Search%C2%A0%C2%A0',  'Mamma.com simple search', 'mamma.com'          ],
+	['http://blogs.icerocket.com/search?q=a+simple+test',																											 'Icerocket Blogs simple search', 'blogs.icerocket.com'    ], 
+	['http://blogsearch.google.com/blogsearch?hl=en&ie=UTF-8&q=a+simple+test&btnG=Search+Blogs',							 'Google Blogs simple search', 'blogsearch.google.com'					],
+	['http://suche.fireball.de/cgi-bin/pursuit?query=a+simple+test&x=0&y=0&cat=fb_loc&enc=utf-8', 						 'Fireball.de simple search', 'suche.fireball.de'          ],
+	['http://suche.web.de/search/web/?allparams=&smode=&su=a+simple+test&webRb=de', 													 'Web.de simple search', 'suche.web.de'								],
+	['http://www.technorati.com/search/a%20simple%20test',                                                      'Technorati simple search', 'technorati.com' ],
+	['http://www.feedster.com/search/a%20simple%20test',                                                        'Feedster.com simple search', 'feedster.com'],
+  ['http://www.google.co.uk/search?sourceid=navclient&aq=t&ie=UTF-8&rls=DVXA,DVXA:2006-32,DVXA:en&q=a+simple+test', 'Google weird search', 'google.co.uk'],
+  ['http://www.tesco.net/google/searchresults.asp?q=a+simple+test&cr=', 'Tesco.net Google search', 'tesco.net'],
+  ['http://gps.virgin.net/search/sitesearch?submit.x=1&start=0&format=1&num=10&restrict=site&sitefilter=site%2Fsite_filter.hts&siteresults=site%2Fsite_results.hts&sitescorethreshold=28&q=a+simple+test&scope=UK&x=0&y=0', 'Virgin.net search', 'gps.virgin.net'],
+  ['http://search.bbc.co.uk/cgi-bin/search/results.pl?tab=web&go=homepage&q=a+simple+test&Search.x=0&Search.y=0&Search=Search&scope=all', 'BBC Google search', 'search.bbc.co.uk'],
+  ['http://search.live.com/results.aspx?q=a+simple+test&mkt=en-us&FORM=LVSP&go.x=0&go.y=0&go=Search', 'MS Live', 'search.live.com'],
+  ['http://search.mywebsearch.com/mywebsearch/AJmain.jhtml?searchfor=a+simple+test', 'MyWebSearch.com', 'search.mywebsearch.com'],
+  ['http://www.megasearching.net/m/search.aspx?s=a+simple+test&mkt=&orig=1', 'Megasearch', 'megasearching.net'],
+  ['http://www.blueyonder.co.uk/blueyonder/searches/search.jsp?q=a+simple+test&cr=&sitesearch=&x=0&y=0', 'Blueyonder search', 'blueyonder.co.uk'],
+  ['http://search.ntlworld.com/ntlworld/search.php?q=a+simple+test&cr=&x=0&y=0', 'NTLworld search', 'search.ntlworld.com'],
+  ['http://search.orange.co.uk/all?p=_searchbox&pt=resultgo&brand=ouk&tab=web&q=a+simple+test', 'Orange.co.uk', 'search.orange.co.uk'],
+  ['http://search.virginmedia.com/results/index.php?channel=other&q=a+simple+test&cr=&x=0&y=0', 'VirginMedia search', 'search.virginmedia.com'],
+  ['http://as.starware.com/dp/search?src_id=305&product=unknown&qry=a+simple+test&z=Find+It', 'Starware', 'as.starware.com'],
 ] ;
 
 my $raa_complexTests = [
@@ -84,24 +88,33 @@ my $ra_nowarnings = [
 
 diag "\nTesting simple queries\n\n" ;
 foreach (@$raa_simpleTests) {
-  is ( parse_search_string($_->[0]), 'a simple test', $_->[1] ) ;
-} ;
- 
+  is ( $obj->parse_search_string($_->[0]), 'a simple test', $_->[1] ) ;
+} 
 
 diag "\nTesting complex queries\n\n" ;
 foreach (@$raa_complexTests) {
-  is ( parse_search_string($_->[0]), 'a more! complex_ search$', $_->[1] ) ;
-
+  is ( $obj->parse_search_string($_->[0]), 'a more! complex_ search$', $_->[1] ) ;
 }
 
 diag "\nMaking sure no warnings get issues from weird Google\n\n" ;
 foreach (@$ra_nowarnings) {
-  is ( parse_search_string($_), undef, 'no warnings test' ) ;
+  is ( $obj->parse_search_string($_), undef, 'no warnings test' ) ;
 }
 
 diag "\nTesting for akward situations\n\n" ;
-is ( parse_search_string('http://googlemapsmania.blogspot.com/'), undef, 'Google-esque sites do not go through') ;
-is ( parse_search_string('-------------------------'), undef, 'Works with bad input') ;
-is ( parse_search_string(''), undef, 'Works with no input') ;
-is ( parse_search_string('http://www.google.co.uk/search?q=%22The+Berwick+Inn%22+Sussex&hl=en'), '"The Berwick Inn" Sussex', 'proper escaping') ;
+is ( $obj->parse_search_string('http://googlemapsmania.blogspot.com/'), undef, 'Google-esque sites do not go through') ;
+is ( $obj->parse_search_string('-------------------------'), undef, 'Works with bad input') ;
+is ( $obj->parse_search_string(''), undef, 'Works with no input') ;
+is ( $obj->parse_search_string('http://www.google.co.uk/search?q=%22The+Berwick+Inn%22+Sussex&hl=en'), '"The Berwick Inn" Sussex', 'proper escaping') ;
 
+diag "\nTesting search engine extraction\n\n" ;
+foreach (@$raa_simpleTests) {
+  my $ra_test = $_ ;
+  
+  my $ref_str = $ra_test->[0] ;
+  my $engine = $ra_test->[2] ;
+  
+  my $rv = $obj->findEngine($ref_str) ;
+  
+  is ( $rv, $engine, "$engine detected" ) ;
+}
