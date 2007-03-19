@@ -6,7 +6,7 @@ use URI::Escape ( "uri_unescape" ) ;
 
 require Exporter;
 @ISA = (Exporter);
-@EXPORT = ( qw (parse_search_string findEngine) );
+@EXPORT = ( qw (parse_search_string findEngine se_host se_name se_term) );
 
 use strict;
 
@@ -16,20 +16,21 @@ URI::ParseSearchString - parse Apache refferer logs and extract search engine qu
 
 =head1 VERSION
 
-Version 1.9  (more fat - less healthy ingredients!)
+Version 2.0  (St Patricks Day Release)
 
 =cut
 
-our $VERSION = '1.9';
+our $VERSION = '2.0';
 
 =head1 SYNOPSIS
 
-    use URI::ParseSearchString ;
+  use URI::ParseSearchString ;
 
-    my $uparse = new URI::ParseSearchString() ;
-    
-    $string = $uparse->parse_search_string('http://www.google.com/search?hl=en&q=a+simple+test&btnG=Google+Search') ;
-    $engine = $uparse->findEngine('http://www.google.com/search?hl=en&q=a+simple+test&btnG=Google+Search') ;
+  my $uparse = new URI::ParseSearchString() ;
+  
+  my $query_terms = $uparse->se_term('http://www.google.com/search?hl=en&q=a+simple+test&btnG=Google+Search') ;
+  my $engine_name = $uparse->se_name('http://www.google.com/search?hl=en&q=a+simple+test&btnG=Google+Search') ;
+  my $engine_hostname = $uparse->se_host('http://www.google.com/search?hl=en&q=a+simple+test&btnG=Google+Search') ;
 
 =head1 FUNCTIONS
 
@@ -83,6 +84,9 @@ Currently supported search engines include:
 B<AOL (UK)>
 
 =item *
+B<AOLSEARCH>
+
+=item *
 B<AllTheWeb>
 
 =item *
@@ -107,7 +111,7 @@ B<Froogle>
 B<Froogle UK>
 
 =item *
-B<Google>
+B<Google & 231 other TLD's>
 
 =item *
 B<Google Blog Search>
@@ -173,6 +177,21 @@ B<Yahoo>
 
 =cut
 
+=head2 se_term
+
+Same as parse_search_string().
+
+=cut
+
+sub se_term {
+  my $self = shift ;
+  my $string = shift ;
+  
+  return unless defined $string ;
+  return $self->parse_search_string($string) ;
+    
+}
+
 sub parse_search_string {
   my $self = shift ;
   
@@ -210,8 +229,8 @@ sub parse_search_string {
   }
   	
 	# parse MSN, Altavista, Blueyonder, AllTheWeb, Tesco and Ice Rocket search strings.
-	if ($auth =~ m/(.altavista.|alltheweb.com|^search.msn.co|.ask.com|search.bbc.co.uk|search.live.com|search.virginmedia.com)/i 
-	|| $auth =~ m/(blueyonder.co.uk|blogs.icerocket.com|blogsearch.google.com|froogle.google.co|tesco.net|gps.virgin.net|search.ntlworld.com|search.orange.co.uk)/i ) {
+	if ($auth =~ m/(.altavista.|alltheweb.com|^search.msn.co|.ask.com|search.bbc.co.uk|search.live.com|search.virginmedia.com|search.prodigy.msn.com)/i 
+	|| $auth =~ m/(blueyonder.co.uk|blogs.icerocket.com|blogsearch.google.com|froogle.google.co|tesco.net|gps.virgin.net|search.ntlworld.com|search.orange.co.uk|search.arabia.msn.com)/i ) {
 		$query =~ m/q=([^&]+)/i ;
 	    $query_string = $1 ;
 	    $query_string =~ s/\+/ /g ;
@@ -220,7 +239,7 @@ sub parse_search_string {
 	}
 	
 	# parse Lycos, HotBot and Fireball.de search strings.
-	elsif ($auth =~ m/(search.lycos.|hotbot.co|suche.fireball.de)/i ) {
+	elsif ($auth =~ m/(search.lycos.|hotbot.co|suche.fireball.de|aolsearch.aol.com)/i ) {
 		$query =~ m/query=([^&]+)/i ;
 	    $query_string = $1 ;
 	    $query_string =~ s/\+/ /g ;
@@ -304,12 +323,11 @@ sub parse_search_string {
 
 =head2 findEngine
 
-  Returns the search engine identified as extracted by the supplied
-  referrer URL.
+  Returns the search engine hostname and name extracted by the supplied referrer URL.
   
 my $engine = $uparse->findEngine('http://www.google.com/search?hl=en&q=a+simple+test&btnG=Google+Search') ;
  
-  This will return "google.com" as the search engine.
+  This will return "google.com" as the search engine hostname and 'Google' as the name.
 
   Currently supports 231 Google TLD's & all the above mentioned search engines.
 
@@ -323,19 +341,49 @@ sub findEngine {
   my $ra_engines = $self->{engines} ;
   return unless defined $ra_engines && ref $ra_engines eq 'ARRAY' ;
         
-  foreach my $engine (@$ra_engines) {
-    chomp ($engine) ;
-    next if $engine =~ m@^#@ ;
-    $engine =~ s/\s{1,}//g ;
+  foreach my $engine_id (@$ra_engines) {
+    chomp ($engine_id) ;
+    next if $engine_id =~ m@^#@ ;
+    my ($host, $name) = split /\| /, $engine_id ;
     
-    if ($ref_str =~ m/$engine/i ) {
-       $engine =~ s@www.@@ ;
-       return $engine ;
+    $host =~ s/\s{1,}//g ;
+    $name =~ s/\s{1,}$//g ;
+          
+    if ($ref_str =~ m/$host/i ) {
+       $host =~ s@www.@@ ;
+       return ($host, $name) ;
     }    
   }
   return ;
 }
 
+=head2 se_host 
+
+Wrapper around findEngine. Returns the search engine hostname.
+
+=cut
+
+sub se_host {
+  my $self = shift ;
+  my $string = shift ;
+  return unless defined $string ;
+  my ($host,$name) = $self->findEngine($string) ;
+  return $host ;
+}
+
+=head2 se_name
+
+Wrapper around findEngine. Returns the search engine canonical name.
+
+=cut
+
+sub se_name {
+  my $self = shift ;
+  my $string = shift ;
+  return unless defined $string ;
+  my ($host,$name) = $self->findEngine($string) ;
+  return $name ;
+}
 
 =head1 AUTHOR
 
@@ -372,268 +420,271 @@ under the same terms as Perl itself.
 
 __DATA__
 ## -- Google TLD's
-blogsearch.google.com
-www.google.ad 
-www.google.ae 
-www.google.af 
-www.google.com.af 
-www.google.ag 
-www.google.com.ag
-www.google.off.ai 
-www.google.com.ai 
-www.google.am 
-www.google.com.ar 
-www.google.as 
-www.google.at 
-www.google.co.at 
-www.google.com.au 
-www.google.az 
-www.google.com.az 
-www.google.bas
-www.google.com.bd 
-www.google.be
-www.google.bg
-www.google.com.bh 
-www.google.bi 
-www.google.com.bi 
-www.google.co.bi 
-www.google.biz 
-www.google.com.bn 
-www.google.bo 
-www.google.com.bo 
-www.google.com.br 
-www.google.bs 
-www.google.com.bs 
-www.google.co.bw 
-www.google.bz 
-www.google.com.bz 
-www.google.ca 
-www.google.cc 
-www.google.cd 
-www.google.cg 
-www.google.ch 
-www.google.ci 
-www.google.co.ci 
-www.google.co.ck 
-www.google.cl 
-www.google.cn 
-www.google.com.cn 
-www.google.com.co 
-www.google.com
-www.google.co.cr 
-www.google.com.cu 
-www.google.cz 
-www.google.de 
-www.google.dj 
-www.google.dk 
-www.google.dm 
-www.google.com.do 
-www.google.ec 
-www.google.com.ec 
-www.google.ee 
-www.google.com.eg 
-www.google.es 
-www.google.com.et 
-www.google.fi 
-www.google.com.fj 
-www.google.fm 
-www.google.fr 
-www.google.gd 
-www.google.ge 
-www.google.com.ge 
-www.google.gf 
-www.google.gg 
-www.google.co.gg 
-www.google.com.gh 
-www.google.com.gi 
-www.google.gl 
-www.google.com.gl 
-www.google.co.gl 
-www.google.gm 
-www.google.gp 
-www.google.com.gp 
-www.google.gr 
-www.google.com.gr 
-www.google.com.gt 
-www.google.gy 
-www.google.com.gy 
-www.google.co.gy 
-www.google.hk 
-www.google.com.hk 
-www.google.hn 
-www.google.com.hn 
-www.google.hr 
-www.google.com.hr 
-www.google.ht 
-www.google.hu 
-www.google.co.hu 
-www.google.co.id 
-www.google.ie 
-www.google.co.il 
-www.google.im 
-www.google.co.im 
-www.google.in 
-www.google.co.in 
-www.google.info 
-www.google.is 
-www.google.it 
-www.google.co.it 
-www.google.je 
-www.google.co.je 
-www.google.com.jm 
-www.google.jo 
-www.google.com.jo 
-www.google.jobs 
-www.google.jp 
-www.google.co.jp
-www.google.co.ke 
-www.google.kg 
-www.google.com.kg 
-www.google.com.kh 
-www.google.ki 
-www.google.com.ki 
-www.google.co.kr 
-www.google.kz 
-www.google.com.kz 
-www.google.la 
-www.google.li 
-www.google.lk 
-www.google.com.lk 
-www.google.co.ls 
-www.google.lt 
-www.google.lu 
-www.google.lv 
-www.google.com.lv 
-www.google.com.ly 
-www.google.ma 
-www.google.co.ma 
-www.google.md 
-www.google.mn 
-www.google.mobi 
-www.google.ms 
-www.google.com.mt 
-www.google.mu 
-www.google.com.mu 
-www.google.co.mu 
-www.google.mv 
-www.google.mw 
-www.google.com.mw 
-www.google.co.mw 
-www.google.com.mx 
-www.google.com.my 
-www.google.com.na 
-www.google.net 
-www.google.nf 
-www.google.com.nf 
-www.google.com.ng 
-www.google.com.ni 
-www.google.nl 
-www.google.no 
-www.google.com.np 
-www.google.nr 
-www.google.com.nr 
-www.google.nu 
-www.google.co.nz 
-www.google.com.om 
-www.google.com.pa 
-www.google.com.pe 
-www.google.ph 
-www.google.com.ph 
-www.google.pk 
-www.google.com.pk 
-www.google.pl 
-www.google.com.pl 
-www.google.pn 
-www.google.co.pn 
-www.google.pr 
-www.google.com.pr 
-www.google.pt 
-www.google.com.pt 
-www.google.com.py 
-www.google.com.qa 
-www.google.ro 
-www.google.ru 
-www.google.com.ru 
-www.google.rw 
-www.google.com.sa 
-www.google.com.sb 
-www.google.sc 
-www.google.com.sc 
-www.google.se 
-www.google.sg 
-www.google.com.sg 
-www.google.sh 
-www.google.si 
-www.google.sk 
-www.google.sm 
-www.google.sn 
-www.google.sr 
-www.google.st 
-www.google.com.sv 
-www.google.co.th 
-www.google.com.tj 
-www.google.tk 
-www.google.tm 
-www.google.to 
-www.google.tp 
-www.google.com.tr 
-www.google.tt 
-www.google.com.tt 
-www.google.co.tt 
-www.google.tv 
-www.google.tw 
-www.google.com.tw 
-www.google.ug 
-www.google.co.ug 
-www.google.co.uk 
-www.google.us 
-www.google.com.uy 
-www.google.uz 
-www.google.com.uz 
-www.google.co.uz 
-www.google.com.ve 
-www.google.co.ve 
-www.google.vg 
-www.google.com.vi 
-www.google.co.vi 
-www.google.vn 
-www.google.com.vn 
-www.google.vu 
-www.google.ws 
-www.google.com.ws 
-www.google.co.za 
-www.google.co.zm 
-www.google.co.zw
+blogsearch.google.com | Google Blogsearch
+www.google.ad | Google Andorra
+www.google.ae | Google United Arab Emirates
+www.google.af | Google Afghanistan
+www.google.com.af | Google Afghanistan
+www.google.ag | Google Antiqua and Barbuda
+www.google.com.ag | Google Antiqua and Barbuda
+www.google.off.ai | Google Anguilla
+www.google.com.ai | Google Anguilla
+www.google.am | Google Armenia
+www.google.com.ar | Google Argentina
+www.google.as | Google American Samoa
+www.google.at | Google Austria
+www.google.co.at  | Google Austria
+www.google.com.au | Google Australia
+www.google.az | Google Azerbaijan
+www.google.com.az | Google Azerbaijan 
+www.google.ba | Google Bosnia and Herzegovina
+www.google.com.bd | Google Bangladesh
+www.google.be | Google Belgium
+www.google.bg | Google Bulgaria
+www.google.com.bh | Google Bahrain
+www.google.bi | Google Burundi
+www.google.com.bi | Google Burundi
+www.google.co.bi | Google Burundi
+www.google.biz | Google dot biz
+www.google.com.bn | Google Brunei Darussalam
+www.google.bo | Google Bolivia
+www.google.com.bo | Google Bolivia 
+www.google.com.br | Google Brazil
+www.google.bs | Google Bahamas
+www.google.com.bs | Google Bahamas
+www.google.co.bw | Google Botswana
+www.google.bz | Google Belize
+www.google.com.bz | Google Belize
+www.google.ca | Google Canada
+www.google.cc | Google Cocos Islands
+www.google.cd | Google Dem Rep of Congo
+www.google.cg | Google Rep of Congo
+www.google.ch | Google Switzerland
+www.google.ci | Google Cote dIvoire
+www.google.co.ci | Google Ivory Coast
+www.google.co.ck | Google Cook Islands
+www.google.cl | Google Chile
+www.google.cn | Google China
+www.google.com.cn | Google China
+www.google.com.co | Google 
+www.google.com | Google
+www.google.co.cr | Google Costa Rica
+www.google.com.cu | Google Cuba
+www.google.cz | Google Czech Rep
+www.google.de | Google Germany
+www.google.dj | Google Djubouti
+www.google.dk  | Google Denmark
+www.google.dm  | Google Dominica
+www.google.com.do | Google Dominican Rep
+www.google.ec | Google Ecuador
+www.google.com.ec | Google Ecuador
+www.google.ee | Google Estonia
+www.google.com.eg | Google Egypt
+www.google.es | Google Spain
+www.google.com.et | Google Ethiopia
+www.google.fi | Google Finland
+www.google.com.fj | Google Fiji
+www.google.fm | Google Micronesia
+www.google.fr | Google France
+www.google.gd | Google Grenada
+www.google.ge | Google Georgia
+www.google.com.ge | Google Georgia
+www.google.gf | Google French Guiana
+www.google.gg | Google Guernsey
+www.google.co.gg | Google Guernsey
+www.google.com.gh | Google Ghana
+www.google.com.gi | Google Gibraltar
+www.google.gl | Google Greenland
+www.google.com.gl | Google Greenland
+www.google.co.gl | Google Greenland
+www.google.gm | Google Gambia
+www.google.gp | Google Guadeloupe
+www.google.com.gp | Google Guadeloupe
+www.google.gr | Google Greece
+www.google.com.gr | Google Greece
+www.google.com.gt | Google Guatemala
+www.google.gy | Google Guyana
+www.google.com.gy | Google Guyana
+www.google.co.gy | Google Guyana
+www.google.hk | Google Hong Kong
+www.google.com.hk | Google Hong Kong
+www.google.hn | Google Honduras
+www.google.com.hn | Google Honduras
+www.google.hr | Google Croatia
+www.google.com.hr | Google Croatia
+www.google.ht | Google Haiti
+www.google.hu | Google Hungary
+www.google.co.hu | Google Hungary 
+www.google.co.id | Google Indonesia
+www.google.ie | Google Ireland
+www.google.co.il | Google Israel
+www.google.im | Google Isle of Man
+www.google.co.im | Google Isle of Man
+www.google.in | Google India
+www.google.co.in | Google India
+www.google.info | Google dot info
+www.google.is | Google Iceland
+www.google.it | Google Italy
+www.google.co.it | Google Italy
+www.google.je | Google Jersey
+www.google.co.je | Google Jersey
+www.google.com.jm | Google Jamaica
+www.google.jo | Google Jordan
+www.google.com.jo | Google Jordan
+www.google.jobs | Google dot jobs
+www.google.jp | Google Japan
+www.google.co.jp | Google Japan
+www.google.co.ke | Google Kenya
+www.google.kg | Google Kyrgyzstan
+www.google.com.kg | Google Kyrgyzstan
+www.google.com.kh | Google Cambodia
+www.google.ki | Google Kiribati
+www.google.com.ki | Google Kiribati
+www.google.co.kr | Google South Korea
+www.google.kz | Google Kazakhstan
+www.google.com.kz | Google Kazakhstan
+www.google.la | Google Laos
+www.google.li | Google Liechtenstein
+www.google.lk | Google Sri Lanka
+www.google.com.lk | Google Sri Lanka
+www.google.co.ls | Google Lesotho
+www.google.lt | Google Lithuania
+www.google.lu | Google Luxembourg
+www.google.lv | Google Latvia
+www.google.com.lv | Google Latvia
+www.google.com.ly | Google Libya
+www.google.ma | Google Morocco
+www.google.co.ma | Google Morocco
+www.google.md | Google Moldova
+www.google.mn | Google Mongolia
+www.google.mobi | Google dot mobi
+www.google.ms | Google Montserrat
+www.google.com.mt | Google Malta
+www.google.mu | Google Mauritius
+www.google.com.mu | Google Mauritius
+www.google.co.mu | Google Mauritius
+www.google.mv | Google Maldives
+www.google.mw | Google Malawi
+www.google.com.mw | Google Malawi
+www.google.co.mw | Google Malawi
+www.google.com.mx | Google Mexico
+www.google.com.my | Google Malaysia
+www.google.com.na | Google Namibia
+www.google.net | Google dot net
+www.google.nf | Google Norfolk Island
+www.google.com.nf | Google Norfolk Island
+www.google.com.ng | Google Nigeria
+www.google.com.ni | Google Nicaragua
+www.google.nl | Google Netherlands
+www.google.no | Google Norway
+www.google.com.np | Google Nepal
+www.google.nr | Google Nauru
+www.google.com.nr | Google Nauru
+www.google.nu | Google Niue
+www.google.co.nz | Google New Zeland
+www.google.com.om | Google Oman
+www.google.com.pa | Google Panama
+www.google.com.pe | Google Peru
+www.google.ph | Google Philipines
+www.google.com.ph | Google Philipines
+www.google.pk | Google Pakistan
+www.google.com.pk | Google Pakistan
+www.google.pl | Google Poland
+www.google.com.pl | Google Poland
+www.google.pn | Google Pitcairn Islands
+www.google.co.pn | Google Pitcairn Islands
+www.google.pr | Google Puerto Rico
+www.google.com.pr | Google Puerto Rico
+www.google.pt | Google Portugal
+www.google.com.pt | Google Portugal
+www.google.com.py | Google Paraguay
+www.google.com.qa | Google 
+www.google.ro | Google Romania
+www.google.ru | Google Russia
+www.google.com.ru | Google Russia
+www.google.rw | Google Rwanda
+www.google.com.sa | Google Saudi Arabia
+www.google.com.sb | Google Solomon Islands
+www.google.sc | Google Seychelles
+www.google.com.sc | Google Seychelles
+www.google.se | Google Sweden
+www.google.sg | Google Singapore
+www.google.com.sg | Google Singapore
+www.google.sh | Google Saint Helena
+www.google.si | Google Slovenia
+www.google.sk | Google Slovakia
+www.google.sm | Google San Marino
+www.google.sn | Google Senegal
+www.google.sr | Google Suriname
+www.google.st | Google Sao Tome 
+www.google.com.sv | Google El Savador
+www.google.co.th | Google Thailand
+www.google.com.tj | Google Tajikistan
+www.google.tk | Google Tokelau
+www.google.tm | Google Turkmenistan
+www.google.to | Google Tonga
+www.google.tp | Google East Timor
+www.google.com.tr | Google Turkey
+www.google.tt | Google Trinidad and Tobago
+www.google.com.tt | Google Trinidad and Tobago
+www.google.co.tt | Google Trinidad and Tobago
+www.google.tv | Google Tuvalu
+www.google.tw | Google Taiwan
+www.google.com.tw | Google Taiwan
+www.google.ug | Google Uganda
+www.google.co.ug | Google Uganda
+www.google.co.uk | Google UK
+www.google.us | Google US
+www.google.com.uy | Google Uruguay
+www.google.uz | Google Uzbekistan
+www.google.com.uz | Google Uzbekistan 
+www.google.co.uz | Google Uzbekistan
+www.google.com.ve | Google Venezuela
+www.google.co.ve | Google Venezuela
+www.google.vg | Google British Virgin Islands
+www.google.com.vi | Google US Virgin Islands
+www.google.co.vi | Google US Virgin Islands
+www.google.vn | Google Vietnam
+www.google.com.vn | Google Vietnam
+www.google.vu | Google Vanuatu
+www.google.ws | Google Samoa
+www.google.com.ws | Google Samoa
+www.google.co.za | Google	South Africa 
+www.google.co.zm | Google Zambia
+www.google.co.zw | Google Zimbabwe
 ## -- other engines
-uk.altavista.com
-altavista.com
-search.msn.co.uk
-search.msn.com
-search.lycos.co.uk
-search.lycos.com
-uk.search.yahoo.com
-search.yahoo.com
-www.mirago.co.uk
-uk.ask.com
-www.netscape.com
-search.aol.co.uk
-www.tiscali.co.uk
-www.mamma.com
-blogs.icerocket.com
-www.hotbot.com
-suche.web.de
-suche.fireball.de
-www.alltheweb.com
-www.technorati.com
-www.feedster.com
-www.tesco.net
-gps.virgin.net
-search.bbc.co.uk
-search.live.com
-search.mywebsearch.com
-www.megasearching.net
-www.blueyonder.co.uk
-search.orange.co.uk
-search.ntlworld.com
-search.virginmedia.com
-as.starware.com
+uk.altavista.com | Altavista UK
+altavista.com | Altavista
+search.msn.com | MSN
+search.msn.co.uk | MSN UK
+search.lycos.co.uk | Lycos UK
+search.lycos.com | Lycos
+uk.search.yahoo.com | Yahoo! UK
+search.yahoo.com | Yahoo!
+www.mirago.co.uk | Mirago UK
+uk.ask.com | Ask UK
+www.netscape.com | Netscape
+search.aol.co.uk | AOL UK
+www.tiscali.co.uk | Tiscali UK
+www.mamma.com | Mamma
+blogs.icerocket.com | IceRocket
+www.hotbot.com | HotBot
+suche.web.de | Suche DE
+suche.fireball.de | Fireball DE
+www.alltheweb.com | AllTheWeb
+www.technorati.com | Technorat
+www.feedster.com | Feedster
+www.tesco.net | Tesco Search
+gps.virgin.net | Virgin Search
+search.bbc.co.uk | BBC Search
+search.live.com | Live.com
+search.mywebsearch.com | My Web Search
+www.megasearching.net | Megasearching
+www.blueyonder.co.uk | Blueyonder
+search.orange.co.uk | Orange Search
+search.ntlworld.com | NTLWorld
+search.virginmedia.com | VirginMedia
+as.starware.com | Starware
+aolsearch.aol.com | AOL Search UK
+search.arabia.msn.com | MSN Arabia
+search.prodigy.msn.com | MSN Prodigy

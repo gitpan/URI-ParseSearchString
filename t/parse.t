@@ -13,8 +13,8 @@ my $obj = new URI::ParseSearchString() ;
 
 my $raa_simpleTests = [
 
-	['http://www.google.com/search?hl=en&q=a+simple+test&btnG=Google+Search',                                  'Google.com simple search', 'google.com'         ],
-	['http://www.google.co.uk/search?hl=en&q=a+simple+test&btnG=Google+Search&meta=',                          'Google.co.uk simple search', 'google.co.uk'       ],
+	['http://www.google.com/search?hl=en&q=a+simple+test&btnG=Google+Search',                                  'Google.com simple search', 'google.com', ],
+	['http://www.google.co.uk/search?hl=en&q=a+simple+test&btnG=Google+Search&meta=',                          'Google.co.uk simple search', 'google.co.uk',  ],
 	['http://www.google.co.jp/search?hl=ja&q=a+simple+test&btnG=Google+%E6%A4%9C%E7%B4%A2&lr=',                'Google.jp encoding simple search', 'google.co.jp' ],
 	['http://search.msn.co.uk/results.aspx?q=a+simple+test&geovar=56&FORM=REDIR',                              'MSN.co.uk simple search', 'search.msn.co.uk'          ],
 	['http://search.msn.com/results.aspx?q=a+simple+test&geovar=56&FORM=REDIR',                                'MSN.com simple search', 'search.msn.com'          ],
@@ -51,30 +51,31 @@ my $raa_simpleTests = [
   ['http://search.orange.co.uk/all?p=_searchbox&pt=resultgo&brand=ouk&tab=web&q=a+simple+test', 'Orange.co.uk', 'search.orange.co.uk'],
   ['http://search.virginmedia.com/results/index.php?channel=other&q=a+simple+test&cr=&x=0&y=0', 'VirginMedia search', 'search.virginmedia.com'],
   ['http://as.starware.com/dp/search?src_id=305&product=unknown&qry=a+simple+test&z=Find+It', 'Starware', 'as.starware.com'],
+  ['http://aolsearch.aol.com/aol/search?invocationType=topsearchbox.webhome&query=a+simple+test', 'AOLsearch','aolsearch.aol.com'],
 ] ;
 
 my $raa_complexTests = [
 
-	['http://www.google.com/search?hl=en&lr=&q=a+more%21+complex_+search%24&btnG=Search',                      'Google.com complex search'                  ],
-	['http://www.google.co.uk/search?hl=en&q=a+more%21+complex_+search%24&btnG=Google+Search&meta=',           'Google.co.uk complex search'                ],
-	['http://www.google.co.jp/search?hl=ja&q=a+more%21+complex_+search%24&btnG=Google+%E6%A4%9C%E7%B4%A2&lr=', 'Google.co.jp complex search'                ],
-	['http://search.msn.com/results.aspx?q=a+more%21+complex_+search%24&FORM=QBHP',                            'MSN.co.uk complex search'                   ],
-	['http://search.msn.co.uk/results.aspx?q=a+more%21+complex_+search%24&FORM=MSNH&srch_type=0&cp=65001',     'Altavista.com complex search'               ],
-	['http://www.altavista.com/web/results?itag=ody&q=a+more%21+complex_+search%24&kgs=1&kls=0',               'Altavista.com complex search'               ],
-	['http://uk.altavista.com/web/results?itag=ody&q=a+more%21+complex_+search%24&kgs=1&kls=0',                'Altavista.co.uk complex search'             ],
-  ['http://www.blueyonder.co.uk/blueyonder/searches/search.jsp?q=a+more%21+complex_+search%24&cr=&sitesearch=&x=0&y=0', 'Blueyonder.co.uk complex search' ],
-	['http://www.alltheweb.com/search?cat=web&cs=iso88591&q=a+more%21+complex_+search%24&rys=0&itag=crv&_sb_lang=pref', 'Alltheweb.com complex search'      ],
-	['http://search.lycos.com/?query=a+more%21+complex_+search%24&x=0&y=0',                                              'Lycos.com complex search'         ],
-	['http://search.lycos.co.uk/cgi-bin/pursuit?query=a+more%21+complex_+search%24&enc=utf-8&cat=slim_loc&sc=blue', 'Lucos.co.uk complex search'            ],
-	['http://www.hotbot.com/index.php?query=a+more%21+complex_+search%24&ps=&loc=searchbox&tab=web&mode=search&currProv=msn', 'Hotbot.com complex search'   ],
-	['http://search.yahoo.com/search?p=a+more%21+complex_+search%24&fr=FP-tab-web-t400&toggle=1&cop=&ei=UTF-8', 'Yahoo.com complex search'   ],
-	['http://uk.search.yahoo.com/search?p=a+more%21+complex_+search%24&fr=FP-tab-web-t340&ei=UTF-8&meta=vc%3D', 'Yahoo.co.uk complex search' ],
-	['http://uk.ask.com/web?q=a+more%21+complex_+search%24&qsrc=0&o=0&l=dir&dm=all', 'Ask.com complex search'],
-	['http://www.mirago.co.uk/scripts/qhandler.aspx?qry=a+more%21+complex_+search%24&x=0&y=0', 'Mirago complex search' ],
-	['http://www.netscape.com/search/?s=a+more%21+complex_+search%24', 'Netscape.com complex search' ],
-	['http://search.aol.co.uk/web?query=a+more%21+complex_+search%24&x=0&y=0&isinit=true&restrict=wholeweb', 'AOL UK complex search' ],
-	['http://www.tiscali.co.uk/search/results.php?section=&from=&query=a+more%21+complex_+search%24', 'Tiscali.co.uk complex search' ],
-	['http://www.mamma.com/Mamma?utfout=1&qtype=0&query=a+more%21+complex_+search%24&Submit=%C2%A0%C2%A0Search%C2%A0%C2%A0', 'Mamma.com complex search'],
+	['http://www.google.com/search?hl=en&lr=&q=a+more%21+complex_+search%24&btnG=Search',                      'Google.com complex search', 'Google'                  ],
+	['http://www.google.co.uk/search?hl=en&q=a+more%21+complex_+search%24&btnG=Google+Search&meta=',           'Google.co.uk complex search', 'Google UK'                ],
+	['http://www.google.co.jp/search?hl=ja&q=a+more%21+complex_+search%24&btnG=Google+%E6%A4%9C%E7%B4%A2&lr=', 'Google.co.jp complex search', 'Google Japan'                ],
+	['http://search.msn.com/results.aspx?q=a+more%21+complex_+search%24&FORM=QBHP',                            'MSN.com complex search', 'MSN'         ],
+	['http://search.msn.co.uk/results.aspx?q=a+more%21+complex_+search%24&FORM=MSNH&srch_type=0&cp=65001',     'Altavista.com complex search', 'MSN UK'               ],
+	['http://www.altavista.com/web/results?itag=ody&q=a+more%21+complex_+search%24&kgs=1&kls=0',               'Altavista.com complex search' , 'Altavista'              ],
+	['http://uk.altavista.com/web/results?itag=ody&q=a+more%21+complex_+search%24&kgs=1&kls=0',                'Altavista.co.uk complex search' , 'Altavista UK'            ],
+  ['http://www.blueyonder.co.uk/blueyonder/searches/search.jsp?q=a+more%21+complex_+search%24&cr=&sitesearch=&x=0&y=0', 'Blueyonder.co.uk complex search', 'Blueyonder' ],
+	['http://www.alltheweb.com/search?cat=web&cs=iso88591&q=a+more%21+complex_+search%24&rys=0&itag=crv&_sb_lang=pref', 'Alltheweb.com complex search', 'AllTheWeb'      ],
+	['http://search.lycos.com/?query=a+more%21+complex_+search%24&x=0&y=0',                                              'Lycos.com complex search', 'Lycos'         ],
+	['http://search.lycos.co.uk/cgi-bin/pursuit?query=a+more%21+complex_+search%24&enc=utf-8&cat=slim_loc&sc=blue', 'Lucos.co.uk complex search', 'Lycos UK'            ],
+	['http://www.hotbot.com/index.php?query=a+more%21+complex_+search%24&ps=&loc=searchbox&tab=web&mode=search&currProv=msn', 'Hotbot.com complex search', 'HotBot'   ],
+	['http://search.yahoo.com/search?p=a+more%21+complex_+search%24&fr=FP-tab-web-t400&toggle=1&cop=&ei=UTF-8', 'Yahoo.com complex search', 'Yahoo!'   ],
+	['http://uk.search.yahoo.com/search?p=a+more%21+complex_+search%24&fr=FP-tab-web-t340&ei=UTF-8&meta=vc%3D', 'Yahoo.co.uk complex search', 'Yahoo! UK' ],
+	['http://uk.ask.com/web?q=a+more%21+complex_+search%24&qsrc=0&o=0&l=dir&dm=all', 'Ask.com UK complex search', 'Ask UK'],
+	['http://www.mirago.co.uk/scripts/qhandler.aspx?qry=a+more%21+complex_+search%24&x=0&y=0', 'Mirago complex search', 'Mirago UK' ],
+	['http://www.netscape.com/search/?s=a+more%21+complex_+search%24', 'Netscape.com complex search', 'Netscape' ],
+	['http://search.aol.co.uk/web?query=a+more%21+complex_+search%24&x=0&y=0&isinit=true&restrict=wholeweb', 'AOL UK complex search', 'AOL UK' ],
+	['http://www.tiscali.co.uk/search/results.php?section=&from=&query=a+more%21+complex_+search%24', 'Tiscali.co.uk complex search', 'Tiscali UK' ],
+	['http://www.mamma.com/Mamma?utfout=1&qtype=0&query=a+more%21+complex_+search%24&Submit=%C2%A0%C2%A0Search%C2%A0%C2%A0', 'Mamma.com complex search', 'Mamma'],
 ] ;
 
 my $ra_nowarnings = [
@@ -88,12 +89,13 @@ my $ra_nowarnings = [
 
 diag "\nTesting simple queries\n\n" ;
 foreach (@$raa_simpleTests) {
-  is ( $obj->parse_search_string($_->[0]), 'a simple test', $_->[1] ) ;
+  is ( $obj->se_term($_->[0]), 'a simple test', $_->[1] ) ;
 } 
 
 diag "\nTesting complex queries\n\n" ;
 foreach (@$raa_complexTests) {
-  is ( $obj->parse_search_string($_->[0]), 'a more! complex_ search$', $_->[1] ) ;
+  is ( $obj->se_term($_->[0]), 'a more! complex_ search$', $_->[1] ) ;
+  is ( $obj->se_name($_->[0]), $_->[2], "extracted name :$_->[2]" ) ;
 }
 
 diag "\nMaking sure no warnings get issues from weird Google\n\n" ;
@@ -114,7 +116,7 @@ foreach (@$raa_simpleTests) {
   my $ref_str = $ra_test->[0] ;
   my $engine = $ra_test->[2] ;
   
-  my $rv = $obj->findEngine($ref_str) ;
-  
+  my $rv = $obj->se_host($ref_str) ;
   is ( $rv, $engine, "$engine detected" ) ;
+  
 }

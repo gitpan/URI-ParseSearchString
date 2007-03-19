@@ -22,3 +22,5 @@ Revision history for URI-ParseSearchString
 1.8     Added Orange, NTLworld.
 1.9     Major revamp. New function added to detect search the search engine used. Also added two
         additional search engines. Now using objects.
+2.0     Even more changes. More functions being exported, more detailed breakdown of
+        information. Special thanks to Lana for the invaluable feedback.
