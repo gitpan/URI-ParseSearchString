@@ -24,3 +24,4 @@ Revision history for URI-ParseSearchString
         additional search engines. Now using objects.
 2.0     Even more changes. More functions being exported, more detailed breakdown of
         information. Special thanks to Lana for the invaluable feedback.
+2.1     Very small fixes, some typos.

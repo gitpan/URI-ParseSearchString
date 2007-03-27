@@ -16,11 +16,11 @@ URI::ParseSearchString - parse Apache refferer logs and extract search engine qu
 
 =head1 VERSION
 
-Version 2.0  (St Patricks Day Release)
+Version 2.1  (St Patricks Day Release)
 
 =cut
 
-our $VERSION = '2.0';
+our $VERSION = '2.1';
 
 =head1 SYNOPSIS
 
@@ -663,6 +663,7 @@ uk.search.yahoo.com | Yahoo! UK
 search.yahoo.com | Yahoo!
 www.mirago.co.uk | Mirago UK
 uk.ask.com | Ask UK
+www.ask.com | Ask dot com
 www.netscape.com | Netscape
 search.aol.co.uk | AOL UK
 www.tiscali.co.uk | Tiscali UK
@@ -672,7 +673,7 @@ www.hotbot.com | HotBot
 suche.web.de | Suche DE
 suche.fireball.de | Fireball DE
 www.alltheweb.com | AllTheWeb
-www.technorati.com | Technorat
+www.technorati.com | Technorati
 www.feedster.com | Feedster
 www.tesco.net | Tesco Search
 gps.virgin.net | Virgin Search
@@ -685,6 +686,6 @@ search.orange.co.uk | Orange Search
 search.ntlworld.com | NTLWorld
 search.virginmedia.com | VirginMedia
 as.starware.com | Starware
-aolsearch.aol.com | AOL Search UK
+aolsearch.aol.com | AOL Search
 search.arabia.msn.com | MSN Arabia
 search.prodigy.msn.com | MSN Prodigy

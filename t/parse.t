@@ -52,6 +52,7 @@ my $raa_simpleTests = [
   ['http://search.virginmedia.com/results/index.php?channel=other&q=a+simple+test&cr=&x=0&y=0', 'VirginMedia search', 'search.virginmedia.com'],
   ['http://as.starware.com/dp/search?src_id=305&product=unknown&qry=a+simple+test&z=Find+It', 'Starware', 'as.starware.com'],
   ['http://aolsearch.aol.com/aol/search?invocationType=topsearchbox.webhome&query=a+simple+test', 'AOLsearch','aolsearch.aol.com'],
+  ['http://www.ask.com/web?q=a+simple+test&qsrc=0&o=0&l=dir', 'Ask.com', 'ask.com']
 ] ;
 
 my $raa_complexTests = [
