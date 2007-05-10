@@ -16,11 +16,11 @@ URI::ParseSearchString - parse Apache refferer logs and extract search engine qu
 
 =head1 VERSION
 
-Version 2.1  (St Patricks Day Release)
+Version 2.2  (St Patricks Day Release)
 
 =cut
 
-our $VERSION = '2.1';
+our $VERSION = '2.2';
 
 =head1 SYNOPSIS
 
@@ -467,7 +467,6 @@ www.google.cl | Google Chile
 www.google.cn | Google China
 www.google.com.cn | Google China
 www.google.com.co | Google 
-www.google.com | Google
 www.google.co.cr | Google Costa Rica
 www.google.com.cu | Google Cuba
 www.google.cz | Google Czech Rep
@@ -652,6 +651,7 @@ www.google.com.ws | Google Samoa
 www.google.co.za | Google	South Africa 
 www.google.co.zm | Google Zambia
 www.google.co.zw | Google Zimbabwe
+www.google.com | Google
 ## -- other engines
 uk.altavista.com | Altavista UK
 altavista.com | Altavista

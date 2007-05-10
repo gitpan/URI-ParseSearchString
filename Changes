@@ -25,3 +25,4 @@ Revision history for URI-ParseSearchString
 2.0     Even more changes. More functions being exported, more detailed breakdown of
         information. Special thanks to Lana for the invaluable feedback.
 2.1     Very small fixes, some typos.
+2.2     Changed the ordering of the search engine matching.
