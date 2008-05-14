@@ -52,7 +52,17 @@ my $raa_simpleTests = [
   ['http://search.virginmedia.com/results/index.php?channel=other&q=a+simple+test&cr=&x=0&y=0', 'VirginMedia search', 'search.virginmedia.com'],
   ['http://as.starware.com/dp/search?src_id=305&product=unknown&qry=a+simple+test&z=Find+It', 'Starware', 'as.starware.com'],
   ['http://aolsearch.aol.com/aol/search?invocationType=topsearchbox.webhome&query=a+simple+test', 'AOLsearch','aolsearch.aol.com'],
-  ['http://www.ask.com/web?q=a+simple+test&qsrc=0&o=0&l=dir', 'Ask.com', 'ask.com']
+  ['http://www.ask.com/web?q=a+simple+test&qsrc=0&o=0&l=dir', 'Ask.com', 'ask.com' ],
+  ['http://buscador.terra.es/Default.aspx?source=Search&ca=s&query=a%20simple%20test', 'Terra.es', 'buscador.terra.es'],
+  ['http://busca.orange.es/search?origen=home&destino=web&buscar=a+simple+test', 'Orange.es', 'busca.orange.es'],
+  ['http://search.sweetim.com/search.asp?ln=en&q=a%20simple%20test', 'Sweetim', 'search.sweetim.com'],
+  ['http://search.conduit.com/Results.aspx?q=a+simple+test&hl=en&SelfSearch=1&SearchSourceOrigin=1&ctid=WEBSITE', 'Conduit', 'search.conduit.com'],
+  ['http://buscar.ozu.es/index.php?etq=web&q=a+simple+test', 'Ozu.es', 'buscar.ozu.es'],
+  ['http://buscador.lycos.es/cgi-bin/pursuit?query=a+simple+test&websearchCat=loc&cat=loc&SITE=de&enc=utf-8&ref=sboxlink', 'Lycos.es', 'buscador.lycos.es'],
+  ['http://search.icq.com/search/results.php?q=a+simple+test&ch_id=st&search_mode=web', 'ICQ.com', 'search.icq.com'],
+  ['http://search.yahoo.co.jp/search?ei=UTF-8&fr=sfp_as&p=a+simple+test&meta=vc%3D', 'Yahoo Japan', 'search.yahoo.co.jp'],
+  ['http://www.soso.com/q?pid=s.idx&w=a+simple+test', 'Soso', 'soso.com'],
+  ['http://search.myway.com/search/AJmain.jhtml?searchfor=a+simple+test', 'MyWay', 'search.myway.com']
 ] ;
 
 my $raa_complexTests = [

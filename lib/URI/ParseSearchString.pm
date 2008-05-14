@@ -1,14 +1,14 @@
 package URI::ParseSearchString;
 
-use warnings;
-use URI::Split ( "uri_split" ) ;
-use URI::Escape ( "uri_unescape" ) ;
-
 require Exporter;
 @ISA = (Exporter);
 @EXPORT = ( qw (parse_search_string findEngine se_host se_name se_term) );
 
+use warnings;
 use strict;
+
+use URI::Split  ( "uri_split"    ) ;
+use URI::Escape ( "uri_unescape" ) ;
 
 =head1 NAME
 
@@ -16,11 +16,11 @@ URI::ParseSearchString - parse Apache refferer logs and extract search engine qu
 
 =head1 VERSION
 
-Version 2.2  (St Patricks Day Release)
+Version 2.3  (Sunny and warm London release)
 
 =cut
 
-our $VERSION = '2.2';
+our $VERSION = '2.3';
 
 =head1 SYNOPSIS
 
@@ -28,9 +28,12 @@ our $VERSION = '2.2';
 
   my $uparse = new URI::ParseSearchString() ;
   
-  my $query_terms = $uparse->se_term('http://www.google.com/search?hl=en&q=a+simple+test&btnG=Google+Search') ;
-  my $engine_name = $uparse->se_name('http://www.google.com/search?hl=en&q=a+simple+test&btnG=Google+Search') ;
-  my $engine_hostname = $uparse->se_host('http://www.google.com/search?hl=en&q=a+simple+test&btnG=Google+Search') ;
+  my $query_terms = 
+      $uparse->se_term('http://www.google.com/search?hl=en&q=a+simple+test&btnG=Google+Search') ;
+  my $engine_name = 
+     $uparse->se_name('http://www.google.com/search?hl=en&q=a+simple+test&btnG=Google+Search') ;
+  my $engine_hostname = 
+     $uparse->se_host('http://www.google.com/search?hl=en&q=a+simple+test&btnG=Google+Search') ;
 
 =head1 FUNCTIONS
 
@@ -66,13 +69,15 @@ terms before returning them in the latter case. The function returns undef in al
 
 for example: 
 
-C<$string = $uparse->parse_search_string('http://www.google.com/search?hl=en&q=a+simple+test&btnG=Google+Search') ;>
+   $string = 
+      $uparse->parse_search_string('http://www.google.com/search?hl=en&q=a+simple+test&btnG=Google+Search');
 
 would return I<'a simple test'>
 
 whereas
 
-C<$string = $uparse->parse_search_string('http://www.mamma.com/Mamma?utfout=1&qtype=0&query=a+more%21+complex_+search%24&Submit=%C2%A0%C2%A0Search%C2%A0%C2%A0') ;>
+   $string = 
+      $uparse->parse_search_string('http://www.mamma.com/Mamma?utfout=1&qtype=0&query=a+more%21+complex_+search%24&Submit=%C2%A0%C2%A0Search%C2%A0%C2%A0');
 
 would return I<'a more! complex_ search$'> 
 
@@ -99,6 +104,9 @@ B<Blueyonder (UK)>
 B<BBC search>
 
 =item *
+B<Conduit>
+
+=item *
 B<Feedster Blog Search>
 
 =item * 
@@ -123,7 +131,13 @@ B<HotBot>
 B<Ice Rocket Blog Search>
 
 =item *
+B<ICQ.com>
+
+=item *
 B<Lycos>
+
+=item * 
+B<Lycos ES>
 
 =item *
 B<Mamma>
@@ -144,7 +158,7 @@ B<MSN>
 B<Microsoft live.com>
 
 =item *
-B<Orange>
+B<MyWay>
 
 =item *
 B<Netscape>
@@ -153,13 +167,28 @@ B<Netscape>
 B<NTLworld>
 
 =item *
+B<Orange>
+
+=item *
+B<Ozu ES>
+
+=item *
 B<Starware>
+
+=item *
+B<Sweetim>
+
+=item *
+B<Soso>
 
 =item *
 B<Technorati Blog Search>
 
 =item * 
 B<Tesco Google search>
+
+=item *
+B<Terra (ES)>
 
 =item *
 B<Tiscali (UK)>
@@ -172,6 +201,9 @@ B<Web.de (DE)>
 
 =item *
 B<Yahoo>
+
+=item *
+B<Yahoo Japan>
 
 =back
 
@@ -218,7 +250,7 @@ sub parse_search_string {
 	return unless defined $query ;
 	undef $path ;
 	
-	# parse Google
+	# parse Google , Ozu.es
 	if ( ($auth =~ m/^www.google\./i) ) {
 	  	$query =~ m/\&q=([^&]+)/i || $query =~ m/q=([^&]+)/i ; ;
 	  	  return unless defined $1 ;
@@ -229,17 +261,26 @@ sub parse_search_string {
   }
   	
 	# parse MSN, Altavista, Blueyonder, AllTheWeb, Tesco and Ice Rocket search strings.
-	if ($auth =~ m/(.altavista.|alltheweb.com|^search.msn.co|.ask.com|search.bbc.co.uk|search.live.com|search.virginmedia.com|search.prodigy.msn.com)/i 
-	|| $auth =~ m/(blueyonder.co.uk|blogs.icerocket.com|blogsearch.google.com|froogle.google.co|tesco.net|gps.virgin.net|search.ntlworld.com|search.orange.co.uk|search.arabia.msn.com)/i ) {
+	if ($auth =~ m/(.altavista.|sweetim.com|alltheweb.com|^search.msn.co|.ask.com|search.bbc.co.uk|search.live.com|search.virginmedia.com|search.prodigy.msn.com)/i 
+	|| $auth =~ m/(search.icq.com|blueyonder.co.uk|search.conduit.com|blogs.icerocket.com|blogsearch.google.com|froogle.google.co|tesco.net|gps.virgin.net|search.ntlworld.com|search.orange.co.uk|search.arabia.msn.com)/i ) {
 		$query =~ m/q=([^&]+)/i ;
 	    $query_string = $1 ;
 	    $query_string =~ s/\+/ /g ;
 	    $query_string = uri_unescape($query_string);
 	    return $query_string ;
 	}
-	
+
+   # ozu.es
+	if ($auth =~ m/(.ozu.es)/i ) {
+		 $query =~ m/\&q=([^&]+)/i ;
+	    $query_string = $1 ;
+	    $query_string =~ s/\+/ /g ;
+	    $query_string = uri_unescape($query_string);
+	    return $query_string ;
+	}
+		
 	# parse Lycos, HotBot and Fireball.de search strings.
-	elsif ($auth =~ m/(search.lycos.|hotbot.co|suche.fireball.de|aolsearch.aol.com)/i ) {
+	elsif ($auth =~ m/(lycos.es|terra.es|search.lycos.|hotbot.co|suche.fireball.de|aolsearch.aol.com)/i ) {
 		$query =~ m/query=([^&]+)/i ;
 	    $query_string = $1 ;
 	    $query_string =~ s/\+/ /g ;
@@ -259,6 +300,16 @@ sub parse_search_string {
 	# parse Yahoo search strings.
 	elsif ($auth =~ m/search.yahoo/i) {
 		$query =~ m/p=([^&]+)/i ;
+	    $query_string = $1 ;
+	    $query_string =~ s/\+/ /g ;
+	    $query_string = uri_unescape($query_string);
+	    return $query_string ;
+	}
+	
+	# parse Soso.com
+	
+	elsif ($auth =~ m/soso.com/i) {
+		$query =~ m/w=([^&]+)/i ;
 	    $query_string = $1 ;
 	    $query_string =~ s/\+/ /g ;
 	    $query_string = uri_unescape($query_string);
@@ -301,6 +352,24 @@ sub parse_search_string {
 	    return $query_string ;
 	}
 
+	# parse Orange.es search string.
+	elsif ($auth =~ m/orange.es/i ) {
+		$query =~ m/buscar=([^&]+)/i ;
+	    $query_string = $1 ;
+	    $query_string =~ s/\+/ /g ;
+	    $query_string = uri_unescape($query_string);
+	    return $query_string ;
+	}
+
+   # parse Orange.es search string.
+	elsif ($auth =~ m/.myway.com/i ) {
+		$query =~ m/searchfor=([^&]+)/i ;
+	    $query_string = $1 ;
+	    $query_string =~ s/\+/ /g ;
+	    $query_string = uri_unescape($query_string);
+	    return $query_string ;
+	}
+		
 	# parse Mamma, AOL UK, Tiscali  search strings.
 	elsif ($auth =~ m/(mamma.com|search.aol.co.uk|tiscali.co.uk)/i ) {
 		$query =~ m/query=([^&]+)/i ;
@@ -323,13 +392,13 @@ sub parse_search_string {
 
 =head2 findEngine
 
-  Returns the search engine hostname and name extracted by the supplied referrer URL.
+ Returns the search engine hostname and name extracted by the supplied referrer URL.
   
-my $engine = $uparse->findEngine('http://www.google.com/search?hl=en&q=a+simple+test&btnG=Google+Search') ;
+  my $engine = 
+     $uparse->findEngine('http://www.google.com/search?hl=en&q=a+simple+test&btnG=Google+Search') ;
  
-  This will return "google.com" as the search engine hostname and 'Google' as the name.
-
-  Currently supports 231 Google TLD's & all the above mentioned search engines.
+This will return "google.com" as the search engine hostname and 'Google' as the name.
+Currently supports 231 Google TLD's & all the above mentioned search engines.
 
 =cut
 
@@ -409,7 +478,7 @@ For more information, you could also visit my blog:
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2006 Spiros Denaxas, all rights reserved.
+Copyright 2008 Spiros Denaxas, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
@@ -661,6 +730,7 @@ search.lycos.co.uk | Lycos UK
 search.lycos.com | Lycos
 uk.search.yahoo.com | Yahoo! UK
 search.yahoo.com | Yahoo!
+search.yahoo.jp | Yahoo! Japan
 www.mirago.co.uk | Mirago UK
 uk.ask.com | Ask UK
 www.ask.com | Ask dot com
@@ -689,3 +759,13 @@ as.starware.com | Starware
 aolsearch.aol.com | AOL Search
 search.arabia.msn.com | MSN Arabia
 search.prodigy.msn.com | MSN Prodigy
+buscador.terra.es | Terra ES
+busca.orange.es | Orange ES
+search.sweetim.com | Sweetim
+search.conduit.com | Conduit
+buscar.ozu.es | Ozu ES
+buscador.lycos.es | Lycos ES
+search.icq.com | ICQ dot com
+search.yahoo.co.jp | Yahoo Japan
+soso.com | Soso
+search.myway.com | MyWay
