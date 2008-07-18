@@ -62,7 +62,21 @@ my $raa_simpleTests = [
   ['http://search.icq.com/search/results.php?q=a+simple+test&ch_id=st&search_mode=web', 'ICQ.com', 'search.icq.com'],
   ['http://search.yahoo.co.jp/search?ei=UTF-8&fr=sfp_as&p=a+simple+test&meta=vc%3D', 'Yahoo Japan', 'search.yahoo.co.jp'],
   ['http://www.soso.com/q?pid=s.idx&w=a+simple+test', 'Soso', 'soso.com'],
-  ['http://search.myway.com/search/AJmain.jhtml?searchfor=a+simple+test', 'MyWay', 'search.myway.com']
+  ['http://search.myway.com/search/AJmain.jhtml?searchfor=a+simple+test', 'MyWay', 'search.myway.com'],
+  ['http://www.ilmotore.com/newsearch/?query=a+simple+test&where=web', 'ilMotore', 'ilmotore.com'],
+  ['http://www.ithaki.net/ricerca.cgi?where=italia&query=a+simple+test', 'Ithaki', 'ithaki.net'],
+  ['http://ricerca.alice.it/ricerca?f=hpn&qs=a+simple+test', 'Alice.it', 'alice.it'],
+  ['http://it.search.yahoo.com/search?p=a+simple+test&fr=yfp-t-501&ei=UTF-8&rd=r1','Yahoo IT', 'search.yahoo.com'],
+  ['http://www.excite.it/search/web/results?l=&q=a+simple+test', 'Excite IT', 'excite.it'],
+  ['http://it.altavista.com/web/results?itag=ody&q=a+simple+test&kgs=1&kls=0','Altavista IT', 'altavista.com'],
+  ['http://cerca.lycos.it/cgi-bin/pursuit?query=a+simple+test&cat=web', 'Lycos IT', 'lycos.it'],
+  ['http://arianna.libero.it/search/abin/integrata.cgi?query=a+simple+test&regione=8&x=0&y=0', 'Libero IT', 'libero.it'],
+  ['http://www.thespider.it/dir/index.php?q=a+simple+test&search-btn.x=0&search-btn.y=0', 'TheSpider.it', 'thespider.it'],
+  ['http://godado.it/engine.php?l=it&key=a+simple+test&x=0&y=0', 'Godado IT', 'godado.it'],
+  ['http://www.kataweb.it/ricerca?q=a%20simple%20test&amp;hl=it&amp;start=0', 'Kataweb IT', 'kataweb.it'],
+  ['http://www.simpatico.ws/cgi-bin/links/search.cgi?query=a+simple+test&Vai=Go', 'Simpatico IT', 'simpatico.ws'],
+  ['http://www.categorico.it/ricerca.html?domains=Categorico.it&q=a+simple+test&sa=Cerca+con+Google&sitesearch=&client=pub-0499722654836507&forid=1&channel=7983145815&ie=ISO-8859-1&oe=ISO-8859-1&cof=GALT%3A%23008000%3BGL%3A1%3BDIV%3A%23336699%3BVLC%3A663399%3BAH%3Acenter%3BBGC%3AFFFFFF%3BLBGC%3A336699%3BALC%3A0000FF%3BLC%3A0000FF%3BT%3A000000%3BGFNT%3A0000FF%3BGIMP%3A0000FF%3BFORID%3A11&hl=it', 'Categorico IT', 'categorico.it'],
+  
 ] ;
 
 my $raa_complexTests = [

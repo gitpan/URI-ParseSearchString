@@ -16,11 +16,11 @@ URI::ParseSearchString - parse Apache refferer logs and extract search engine qu
 
 =head1 VERSION
 
-Version 2.3  (Sunny and warm London release)
+Version 2.4  (I-am-homeless release)
 
 =cut
 
-our $VERSION = '2.3';
+our $VERSION = '2.4';
 
 =head1 SYNOPSIS
 
@@ -86,6 +86,9 @@ Currently supported search engines include:
 =over
 
 =item *
+B<Abacho>
+
+=item *
 B<AOL (UK)>
 
 =item *
@@ -104,6 +107,9 @@ B<Blueyonder (UK)>
 B<BBC search>
 
 =item *
+B<Categorico (IT)>
+
+=item *
 B<Conduit>
 
 =item *
@@ -116,13 +122,19 @@ B<Fireball (DE)>
 B<Froogle>
 
 =item *
-B<Froogle UK>
+B<Froogle (UK)>
 
 =item *
 B<Google & 231 other TLD's>
 
 =item *
 B<Google Blog Search>
+
+=item *
+B<Godado>
+
+=item *
+B<Godado (IT)>
 
 =item *
 B<HotBot>
@@ -134,10 +146,25 @@ B<Ice Rocket Blog Search>
 B<ICQ.com>
 
 =item *
+B<ilMotore.com>
+
+=item *
+B<Ithaki.net>
+
+=item *
+B<Kataweb (IT)>
+
+=item *
 B<Lycos>
 
 =item * 
-B<Lycos ES>
+B<Lycos (ES)>
+
+=item *
+B<Lycos (IT)>
+
+=item *
+B<Libero (IT)>
 
 =item *
 B<Mamma>
@@ -179,6 +206,9 @@ B<Starware>
 B<Sweetim>
 
 =item *
+B<Simpatico (IT)>
+
+=item *
 B<Soso>
 
 =item *
@@ -192,6 +222,9 @@ B<Terra (ES)>
 
 =item *
 B<Tiscali (UK)>
+
+=item *
+B<TheSpider (IT)>
 
 =item *
 B<VirginMedia>
@@ -262,7 +295,7 @@ sub parse_search_string {
   	
 	# parse MSN, Altavista, Blueyonder, AllTheWeb, Tesco and Ice Rocket search strings.
 	if ($auth =~ m/(.altavista.|sweetim.com|alltheweb.com|^search.msn.co|.ask.com|search.bbc.co.uk|search.live.com|search.virginmedia.com|search.prodigy.msn.com)/i 
-	|| $auth =~ m/(search.icq.com|blueyonder.co.uk|search.conduit.com|blogs.icerocket.com|blogsearch.google.com|froogle.google.co|tesco.net|gps.virgin.net|search.ntlworld.com|search.orange.co.uk|search.arabia.msn.com)/i ) {
+	|| $auth =~ m/(categorico.it|search.abacho.com|www.excite.|kataweb.it|thespider.it|search.icq.com|blueyonder.co.uk|search.conduit.com|blogs.icerocket.com|blogsearch.google.com|froogle.google.co|tesco.net|gps.virgin.net|search.ntlworld.com|search.orange.co.uk|search.arabia.msn.com)/i ) {
 		$query =~ m/q=([^&]+)/i ;
 	    $query_string = $1 ;
 	    $query_string =~ s/\+/ /g ;
@@ -280,13 +313,22 @@ sub parse_search_string {
 	}
 		
 	# parse Lycos, HotBot and Fireball.de search strings.
-	elsif ($auth =~ m/(lycos.es|terra.es|search.lycos.|hotbot.co|suche.fireball.de|aolsearch.aol.com)/i ) {
+	elsif ($auth =~ m/(simpatico.ws|libero.it|ithaki.net|ilmotore.com|lycos.es|terra.es|search.lycos.|hotbot.co|suche.fireball.de|aolsearch.aol.com|lycos.it)/i ) {
 		$query =~ m/query=([^&]+)/i ;
 	    $query_string = $1 ;
 	    $query_string =~ s/\+/ /g ;
 	    $query_string = uri_unescape($query_string);
 	    return $query_string ;
 	}
+
+   # parse mywebsearch.com 
+	elsif ($auth =~ m/(godado.(it|com))/i ) {
+		$query =~ m/key=([^&]+)/i ;
+	    $query_string = $1 ;
+	    $query_string =~ s/\+/ /g ;
+	    $query_string = uri_unescape($query_string);
+	    return $query_string ;
+	}	
 	
 	# parse mywebsearch.com 
 	elsif ($auth =~ m/(search.mywebsearch.com)/i ) {
@@ -333,6 +375,16 @@ sub parse_search_string {
 	    $query_string = uri_unescape($query_string);
 	    return $query_string ;
 	}
+		
+	# parse Alice.it
+
+   elsif ($auth =~ m/alice.it/i) {
+		$query =~ m/qs=([^&]+)/i ;
+	    $query_string = $1 ;
+	    $query_string =~ s/\+/ /g ;
+	    $query_string = uri_unescape($query_string);
+	    return $query_string ;
+	}		
 		
 	# parse Netscape search strings.
 	elsif ($auth =~ m/www.netscape.com/i ) {
@@ -769,3 +821,17 @@ search.icq.com | ICQ dot com
 search.yahoo.co.jp | Yahoo Japan
 soso.com | Soso
 search.myway.com | MyWay
+ilmotore.com | ilMotore
+ithaki.net | Ithaki
+alice.it | Alice.it
+excite.it | Excite IT
+excite.com | Excite
+lycos.it | Lycos IT
+libero.it | Libero IT
+thespider.it | TheSpider IT
+godado.it | Godado (IT)
+godado.com | Godado
+kataweb.it | Kataweb IT
+simpatico.ws | Simpatico IT
+abacho.com | Abacho
+categorico.it | Categorico IT
