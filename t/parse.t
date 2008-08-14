@@ -76,6 +76,7 @@ my $raa_simpleTests = [
   ['http://www.kataweb.it/ricerca?q=a%20simple%20test&amp;hl=it&amp;start=0', 'Kataweb IT', 'kataweb.it'],
   ['http://www.simpatico.ws/cgi-bin/links/search.cgi?query=a+simple+test&Vai=Go', 'Simpatico IT', 'simpatico.ws'],
   ['http://www.categorico.it/ricerca.html?domains=Categorico.it&q=a+simple+test&sa=Cerca+con+Google&sitesearch=&client=pub-0499722654836507&forid=1&channel=7983145815&ie=ISO-8859-1&oe=ISO-8859-1&cof=GALT%3A%23008000%3BGL%3A1%3BDIV%3A%23336699%3BVLC%3A663399%3BAH%3Acenter%3BBGC%3AFFFFFF%3BLBGC%3A336699%3BALC%3A0000FF%3BLC%3A0000FF%3BT%3A000000%3BGFNT%3A0000FF%3BGIMP%3A0000FF%3BFORID%3A11&hl=it', 'Categorico IT', 'categorico.it'],
+  ['http://www.cuil.com/search?q=a+simple+test', 'Cuil', 'cuil.com'],
   
 ] ;
 

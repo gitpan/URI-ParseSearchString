@@ -16,11 +16,11 @@ URI::ParseSearchString - parse Apache refferer logs and extract search engine qu
 
 =head1 VERSION
 
-Version 2.4  (I-am-homeless release)
+Version 2.5  (nearly at YAPC2008 version)
 
 =cut
 
-our $VERSION = '2.4';
+our $VERSION = '2.5';
 
 =head1 SYNOPSIS
 
@@ -111,6 +111,9 @@ B<Categorico (IT)>
 
 =item *
 B<Conduit>
+
+=item *
+B<Cuil>
 
 =item *
 B<Feedster Blog Search>
@@ -295,7 +298,7 @@ sub parse_search_string {
   	
 	# parse MSN, Altavista, Blueyonder, AllTheWeb, Tesco and Ice Rocket search strings.
 	if ($auth =~ m/(.altavista.|sweetim.com|alltheweb.com|^search.msn.co|.ask.com|search.bbc.co.uk|search.live.com|search.virginmedia.com|search.prodigy.msn.com)/i 
-	|| $auth =~ m/(categorico.it|search.abacho.com|www.excite.|kataweb.it|thespider.it|search.icq.com|blueyonder.co.uk|search.conduit.com|blogs.icerocket.com|blogsearch.google.com|froogle.google.co|tesco.net|gps.virgin.net|search.ntlworld.com|search.orange.co.uk|search.arabia.msn.com)/i ) {
+	|| $auth =~ m/(cuil.com|categorico.it|search.abacho.com|www.excite.|kataweb.it|thespider.it|search.icq.com|blueyonder.co.uk|search.conduit.com|blogs.icerocket.com|blogsearch.google.com|froogle.google.co|tesco.net|gps.virgin.net|search.ntlworld.com|search.orange.co.uk|search.arabia.msn.com)/i ) {
 		$query =~ m/q=([^&]+)/i ;
 	    $query_string = $1 ;
 	    $query_string =~ s/\+/ /g ;
@@ -835,3 +838,4 @@ kataweb.it | Kataweb IT
 simpatico.ws | Simpatico IT
 abacho.com | Abacho
 categorico.it | Categorico IT
+cuil.com | Cuil
