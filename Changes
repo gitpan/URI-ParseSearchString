@@ -29,3 +29,7 @@ Revision history for URI-ParseSearchString
 2.3     Added Orange.es, Terra.es, Sweetim, Conduit, Lycos ES, Ozu ES, ICQ, Yahoo Japan, Soso, MyWay, thanks Ruben!
 2.4     Added ilMotore.com, Ithaki.net, Alice.it, Excite, Lycos IT, Libero IT, The Spider IT, Godado IT, Kataweb IT, Simpatico IT, Abacho, Categorico IT (Thanks Ruben and Matteo!)
 2.5     Added Cuil (thanks Ed!)
+2.6     Major cleaning up of code, thanks to Ed for the advice
+        -- The module now uses a hash for the internal mappings between search engine hosts and names. 
+        -- Removed duplicated code from several places.
+        -- added fastweb.it, t-online.de
