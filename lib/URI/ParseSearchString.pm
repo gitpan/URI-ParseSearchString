@@ -12,15 +12,15 @@ use URI::Escape ( "uri_unescape" ) ;
 
 =head1 NAME
 
-URI::ParseSearchString - parse Apache refferer logs and extract search engine query strings.
+URI::ParseSearchString - parse search engine referrer URLs and extract keywords used
 
 =head1 VERSION
 
-Version 2.6  (i-have-a-cold version)
+Version 2.7  (TGIF version)
 
 =cut
 
-our $VERSION = '2.6';
+our $VERSION = '2.7';
 
 =head1 SYNOPSIS
 
