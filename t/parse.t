@@ -1,18 +1,15 @@
-#!perl 
-
 use strict;
 use warnings ;
-use Test::More 'no_plan'  ;
-use Test::NoWarnings      ;
-use Data::Dumper ;
 
+use Test::More tests => 369;
+use Test::NoWarnings;
 
-use URI::ParseSearchString ;
+use_ok('URI::ParseSearchString') ;
 
 my $obj = new URI::ParseSearchString() ;
+isa_ok($obj, 'URI::ParseSearchString');
 
 my $raa_simpleTests = [
-
    ['http://www.google.com/search?hl=en&q=a+simple+test&btnG=Google+Search',                                  'Google.com simple search', 'google.com', ],
    ['http://www.google.co.uk/search?hl=en&q=a+simple+test&btnG=Google+Search&meta=',                          'Google.co.uk simple search', 'google.co.uk',  ],
    ['http://www.google.co.jp/search?hl=ja&q=a+simple+test&btnG=Google+%E6%A4%9C%E7%B4%A2&lr=',                'Google.jp encoding simple search', 'google.co.jp' ],
@@ -79,31 +76,32 @@ my $raa_simpleTests = [
    ['http://www.cuil.com/search?q=a+simple+test', 'Cuil', 'cuil.com'],
    ['http://www.fastweb.it/portale/google/?qtype=w&q=a+simple+test', 'Fastweb', 'fastweb.it'],
    ['http://suche.t-online.de/fast-cgi/tsc?q=a+simple+test&encQuery=haus+in+lichtenau+bei+karlshuld+&x=0&y=0&lang=any&mandant=toi&device=html&portallanguage=de&userlanguage=de&dia=suche&context=internet-tab&tpc=internet&ptl=std&classification=internet-tab_internet_std&start=0&num=10&ocr=yes&type=all&sb=top&more=none', 'T-Online', 'suche.t-online.de'],
-         
+   ['https://community.paglo.com/search?q=a+simple+test&x=0&y=0', 'Paglo', 'community.paglo.com' ],
+   ['http://mahalo.com/Special:Search?search=a+simple+test&go=Search', 'Mahalo', 'mahalo.com'],
+   ['http://www.sproose.com/search?query=a+simple+test&searchLanguage=en', 'Sproose', 'sproose.com']
 ] ;
 
 my $raa_complexTests = [
-
-   ['http://www.google.com/search?hl=en&lr=&q=a+more%21+complex_+search%24&btnG=Search',                      'Google.com complex search', 'Google'                  ],
-   ['http://www.google.co.uk/search?hl=en&q=a+more%21+complex_+search%24&btnG=Google+Search&meta=',           'Google.co.uk complex search', 'Google UK'                ],
-   ['http://www.google.co.jp/search?hl=ja&q=a+more%21+complex_+search%24&btnG=Google+%E6%A4%9C%E7%B4%A2&lr=', 'Google.co.jp complex search', 'Google Japan'                ],
-   ['http://search.msn.com/results.aspx?q=a+more%21+complex_+search%24&FORM=QBHP',                            'MSN.com complex search', 'MSN'         ],
-   ['http://search.msn.co.uk/results.aspx?q=a+more%21+complex_+search%24&FORM=MSNH&srch_type=0&cp=65001',     'Altavista.com complex search', 'MSN UK'               ],
-   ['http://www.altavista.com/web/results?itag=ody&q=a+more%21+complex_+search%24&kgs=1&kls=0',               'Altavista.com complex search' , 'Altavista'              ],
-   ['http://uk.altavista.com/web/results?itag=ody&q=a+more%21+complex_+search%24&kgs=1&kls=0',                'Altavista.co.uk complex search' , 'Altavista UK'            ],
-   ['http://www.blueyonder.co.uk/blueyonder/searches/search.jsp?q=a+more%21+complex_+search%24&cr=&sitesearch=&x=0&y=0', 'Blueyonder.co.uk complex search', 'Blueyonder' ],
-   ['http://www.alltheweb.com/search?cat=web&cs=iso88591&q=a+more%21+complex_+search%24&rys=0&itag=crv&_sb_lang=pref', 'Alltheweb.com complex search', 'AllTheWeb'      ],
-   ['http://search.lycos.com/?query=a+more%21+complex_+search%24&x=0&y=0',                                              'Lycos.com complex search', 'Lycos'         ],
-   ['http://search.lycos.co.uk/cgi-bin/pursuit?query=a+more%21+complex_+search%24&enc=utf-8&cat=slim_loc&sc=blue', 'Lucos.co.uk complex search', 'Lycos UK'            ],
-   ['http://www.hotbot.com/index.php?query=a+more%21+complex_+search%24&ps=&loc=searchbox&tab=web&mode=search&currProv=msn', 'Hotbot.com complex search', 'HotBot'   ],
-   ['http://search.yahoo.com/search?p=a+more%21+complex_+search%24&fr=FP-tab-web-t400&toggle=1&cop=&ei=UTF-8', 'Yahoo.com complex search', 'Yahoo!'   ],
-   ['http://uk.search.yahoo.com/search?p=a+more%21+complex_+search%24&fr=FP-tab-web-t340&ei=UTF-8&meta=vc%3D', 'Yahoo.co.uk complex search', 'Yahoo! UK' ],
-   ['http://uk.ask.com/web?q=a+more%21+complex_+search%24&qsrc=0&o=0&l=dir&dm=all', 'Ask.com UK complex search', 'Ask UK'],
-   ['http://www.mirago.co.uk/scripts/qhandler.aspx?qry=a+more%21+complex_+search%24&x=0&y=0', 'Mirago complex search', 'Mirago UK' ],
-   ['http://www.netscape.com/search/?s=a+more%21+complex_+search%24', 'Netscape.com complex search', 'Netscape' ],
-   ['http://search.aol.co.uk/web?query=a+more%21+complex_+search%24&x=0&y=0&isinit=true&restrict=wholeweb', 'AOL UK complex search', 'AOL UK' ],
-   ['http://www.tiscali.co.uk/search/results.php?section=&from=&query=a+more%21+complex_+search%24', 'Tiscali.co.uk complex search', 'Tiscali UK' ],
-   ['http://www.mamma.com/Mamma?utfout=1&qtype=0&query=a+more%21+complex_+search%24&Submit=%C2%A0%C2%A0Search%C2%A0%C2%A0', 'Mamma.com complex search', 'Mamma'],
+   ['http://www.google.com/search?hl=en&lr=&q=a+more%21+complex_+search%24&btnG=Search',                      'Google.com complex search', 'google.com'                  ],
+   ['http://www.google.co.uk/search?hl=en&q=a+more%21+complex_+search%24&btnG=Google+Search&meta=',           'Google.co.uk complex search', 'google.co.uk'                ],
+   ['http://www.google.co.jp/search?hl=ja&q=a+more%21+complex_+search%24&btnG=Google+%E6%A4%9C%E7%B4%A2&lr=', 'Google.co.jp complex search', 'google.co.jp'                ],
+   ['http://search.msn.com/results.aspx?q=a+more%21+complex_+search%24&FORM=QBHP',                            'MSN.com complex search', 'search.msn.com'         ],
+   ['http://search.msn.co.uk/results.aspx?q=a+more%21+complex_+search%24&FORM=MSNH&srch_type=0&cp=65001',     'Altavista.com complex search', 'search.msn.co.uk'               ],
+   ['http://www.altavista.com/web/results?itag=ody&q=a+more%21+complex_+search%24&kgs=1&kls=0',               'Altavista.com complex search' , 'altavista.com'              ],
+   ['http://uk.altavista.com/web/results?itag=ody&q=a+more%21+complex_+search%24&kgs=1&kls=0',                'Altavista.co.uk complex search' , 'uk.altavista.com'            ],
+   ['http://www.blueyonder.co.uk/blueyonder/searches/search.jsp?q=a+more%21+complex_+search%24&cr=&sitesearch=&x=0&y=0', 'Blueyonder.co.uk complex search', 'blueyonder.co.uk' ],
+   ['http://www.alltheweb.com/search?cat=web&cs=iso88591&q=a+more%21+complex_+search%24&rys=0&itag=crv&_sb_lang=pref', 'Alltheweb.com complex search', 'alltheweb.com'      ],
+   ['http://search.lycos.com/?query=a+more%21+complex_+search%24&x=0&y=0',                                              'Lycos.com complex search', 'search.lycos.com'         ],
+   ['http://search.lycos.co.uk/cgi-bin/pursuit?query=a+more%21+complex_+search%24&enc=utf-8&cat=slim_loc&sc=blue', 'Lucos.co.uk complex search', 'search.lycos.co.uk'            ],
+   ['http://www.hotbot.com/index.php?query=a+more%21+complex_+search%24&ps=&loc=searchbox&tab=web&mode=search&currProv=msn', 'Hotbot.com complex search', 'hotbot.com'   ],
+   ['http://search.yahoo.com/search?p=a+more%21+complex_+search%24&fr=FP-tab-web-t400&toggle=1&cop=&ei=UTF-8', 'Yahoo.com complex search', 'search.yahoo.com'   ],
+   ['http://uk.search.yahoo.com/search?p=a+more%21+complex_+search%24&fr=FP-tab-web-t340&ei=UTF-8&meta=vc%3D', 'Yahoo.co.uk complex search', 'uk.search.yahoo.com' ],
+   ['http://uk.ask.com/web?q=a+more%21+complex_+search%24&qsrc=0&o=0&l=dir&dm=all', 'Ask.com UK complex search', 'uk.ask.com'],
+   ['http://www.mirago.co.uk/scripts/qhandler.aspx?qry=a+more%21+complex_+search%24&x=0&y=0', 'Mirago complex search', 'mirago.co.uk' ],
+   ['http://www.netscape.com/search/?s=a+more%21+complex_+search%24', 'Netscape.com complex search', 'netscape.com' ],
+   ['http://search.aol.co.uk/web?query=a+more%21+complex_+search%24&x=0&y=0&isinit=true&restrict=wholeweb', 'AOL UK complex search', 'search.aol.co.uk' ],
+   ['http://www.tiscali.co.uk/search/results.php?section=&from=&query=a+more%21+complex_+search%24', 'Tiscali.co.uk complex search', 'tiscali.co.uk' ],
+   ['http://www.mamma.com/Mamma?utfout=1&qtype=0&query=a+more%21+complex_+search%24&Submit=%C2%A0%C2%A0Search%C2%A0%C2%A0', 'Mamma.com complex search', 'mamma.com'],
 ] ;
 
 my $ra_nowarnings = [
@@ -115,47 +113,90 @@ my $ra_nowarnings = [
   'http://www.googlesyndicatedsearch.com/u/huddersfield?hl=en&lr=&ie=ISO-8859-1&domains=www.hud.ac.uk&q=property%2Btong%2C+bradford&btnG=Search&sitesearch=',
 ] ;
 
-diag "\nTesting simple queries\n\n" ;
-foreach (@$raa_simpleTests) {
-  is ( $obj->se_term($_->[0]), 'a simple test', $_->[1] ) ;
+diag 'Testing simple queries';
+
+foreach my $ra_test (@$raa_simpleTests) {
+  my $string     = $ra_test->[0];
+  my $text       = $ra_test->[1];
+  my $hostname   = $ra_test->[2];
+  
+  ok( my $got_terms  = $obj->se_term( $string ) );
+  
+  is(
+     $got_terms,
+     'a simple test',
+     "se_term() for $hostname OK"     
+  );
+  
+  ok( my $got_host = $obj->se_host( $string ) );
+   
+  is(
+     $got_host,
+     $hostname,
+     "se_host() for $hostname OK"     
+  );
+   
 } 
 
-diag "\nTesting complex queries\n\n" ;
-foreach (@$raa_complexTests) {
-  is ( $obj->se_term($_->[0]), 'a more! complex_ search$', $_->[1] ) ;
-  is ( $obj->se_name($_->[0]), $_->[2], "extracted name :$_->[2]" ) ;
+diag 'Testing complex queries';
+
+foreach my $ra_test (@$raa_complexTests) {
+   
+   
+    my $string     = $ra_test->[0];
+    my $text       = $ra_test->[1];
+    my $hostname   = $ra_test->[2];
+
+    ok( my $got_terms  = $obj->se_term( $string ) );
+
+    is(
+       $got_terms,
+       'a more! complex_ search$',
+       "se_term() for $hostname OK"     
+    );
+
+    ok( my $got_host = $obj->se_host( $string ) );
+
+    is(
+       $got_host,
+       $hostname,
+       "se_host() for $hostname OK"     
+    );
+      
 }
 
-diag "\nMaking sure no warnings get issues from weird Google\n\n" ;
-foreach (@$ra_nowarnings) {
-  is ( $obj->parse_search_string($_), undef, 'no warnings test' ) ;
+diag 'Making sure no warnings get issues from weird Google';
+
+foreach my $teststring (@$ra_nowarnings) {
+  is(
+     $obj->parse_search_string($teststring),
+     undef,
+     'no warnings test' 
+  );
 }
 
-diag "\nTesting for akward situations\n\n" ;
-is ( $obj->parse_search_string('http://googlemapsmania.blogspot.com/'), undef, 'Google-esque sites do not go through') ;
-is ( $obj->parse_search_string('-------------------------'), undef, 'Works with bad input') ;
-is ( $obj->parse_search_string(''), undef, 'Works with no input') ;
-is ( $obj->parse_search_string('http://www.google.co.uk/search?q=%22The+Berwick+Inn%22+Sussex&hl=en'), '"The Berwick Inn" Sussex', 'proper escaping') ;
+diag 'Testing for akward situations';
 
-diag "\nTesting search engine extraction\n\n" ;
-foreach (@$raa_simpleTests) {
-  my $ra_test = $_ ;
-  
-  my $ref_str = $ra_test->[0] ;
-  my $engine = $ra_test->[2] ;
-  
-  my $rv = $obj->se_host($ref_str) ;
-  is ( $rv, $engine, "$engine detected" ) ;
-  
-}
+is(
+   $obj->parse_search_string('http://googlemapsmania.blogspot.com/'),
+   undef,
+   'Google-esque sites do not go through'
+);
 
-# filehandle screwing up test
-my $obj2 = new URI::ParseSearchString;
-is( $obj2->se_term('http://www.google.com/search?hl=en&q=a+simple+test&btnG=Google+Search'), 'a simple test' );
-is( $obj2->se_host('http://www.google.com/search?hl=en&q=a+simple+test&btnG=Google+Search'), 'google.com' );
+is(
+   $obj->parse_search_string('-------------------------'),
+   undef,
+   'Works with bad input'
+);
 
+is(
+   $obj->parse_search_string(''),
+   undef,
+   'Works with no input'
+);
 
-
-
-
-
+is(
+   $obj->parse_search_string('http://www.google.co.uk/search?q=%22The+Berwick+Inn%22+Sussex&hl=en'),
+   '"The Berwick Inn" Sussex',
+   'proper escaping'
+);

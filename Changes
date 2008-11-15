@@ -34,3 +34,7 @@ Revision history for URI-ParseSearchString
         -- Removed duplicated code from several places.
         -- added fastweb.it, t-online.de
 2.7     Updated META.yml and abstract
+2.8     Long overdue major rewriting of the code, POD and tests (thanks Menno!)
+        -- added Paglo
+        -- added Mahalo
+        -- added Sproose

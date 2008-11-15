@@ -6,9 +6,7 @@ require Exporter;
 
 use warnings;
 use strict;
-
-use URI::Split  ( "uri_split"    ) ;
-use URI::Escape ( "uri_unescape" ) ;
+use URI;
 
 =head1 NAME
 
@@ -16,24 +14,22 @@ URI::ParseSearchString - parse search engine referrer URLs and extract keywords 
 
 =head1 VERSION
 
-Version 2.7  (TGIF version)
+Version 2.8  (Lich king edition)
 
 =cut
 
-our $VERSION = '2.7';
+our $VERSION = '2.8';
 
 =head1 SYNOPSIS
 
   use URI::ParseSearchString ;
 
-  my $uparse = new URI::ParseSearchString() ;
-  
-  my $query_terms = 
-      $uparse->se_term('http://www.google.com/search?hl=en&q=a+simple+test&btnG=Google+Search') ;
-  my $engine_name = 
-     $uparse->se_name('http://www.google.com/search?hl=en&q=a+simple+test&btnG=Google+Search') ;
-  my $engine_hostname = 
-     $uparse->se_host('http://www.google.com/search?hl=en&q=a+simple+test&btnG=Google+Search') ;
+  my $uparse = new URI::ParseSearchString();
+  my $ref    = 'http://www.google.com/search?hl=en&q=a+simple+test&btnG=Google+Search';
+    
+  my $query_terms = $uparse->se_term( $ref );
+  my $canonical   = $uparse->se_name( $ref );
+  my $hostname    = $uparse->se_host( $ref );
 
 =head1 FUNCTIONS
 
@@ -46,302 +42,305 @@ our $VERSION = '2.7';
 =cut
 
 my $RH_LOOKUPS = {
-   'abacho.com'             => 'Abacho',
-   'alice.it'               => 'Alice.it',
-   'altavista.com'          => { name => 'Altavista', mutex => 'uk.altavista.com' },
-   'aolsearch.aol.com'      => 'AOL Search',
-   'as.starware.com'        => 'Starware',
-   'blogs.icerocket.com'    => 'IceRocket',
-   'blogsearch.google.com'  => 'Google Blogsearch',
-   'busca.orange.es'        => 'Orange ES',
-   'buscador.lycos.es'      => 'Lycos ES',
-   'buscador.terra.es'      => 'Terra ES',
-   'buscar.ozu.es'          => 'Ozu ES',
-   'categorico.it'          => 'Categorico IT',
-   'cuil.com'               => 'Cuil',
-   'excite.com'             => 'Excite',
-   'excite.it'              => 'Excite IT',
-   'www.fastweb.it'         => 'Fastweb IT',
-   'godado.com'             => 'Godado',
-   'godado.it'              => 'Godado (IT)',
-   'gps.virgin.net'         => 'Virgin Search',
-   'ilmotore.com'           => 'ilMotore',
-   'ithaki.net'             => 'Ithaki',
-   'kataweb.it'             => 'Kataweb IT',
-   'libero.it'              => 'Libero IT',
-   'lycos.it'               => 'Lycos IT',
-   'search.aol.co.uk'       => 'AOL UK',
-   'search.arabia.msn.com'  => 'MSN Arabia',
-   'search.bbc.co.uk'       => 'BBC Search',
-   'search.conduit.com'     => 'Conduit',
-   'search.icq.com'         => 'ICQ dot com',
-   'search.live.com'        => 'Live.com',
-   'search.lycos.co.uk'     => 'Lycos UK',
-   'search.lycos.com'       => 'Lycos',
-   'search.msn.co.uk'       => 'MSN UK',
-   'search.msn.com'         => 'MSN',
-   'search.myway.com'       => 'MyWay',
-   'search.mywebsearch.com' => 'My Web Search',
-   'search.ntlworld.com'    => 'NTLWorld',
-   'search.orange.co.uk'    => 'Orange Search',
-   'search.prodigy.msn.com' => 'MSN Prodigy',
-   'search.sweetim.com'     => 'Sweetim',
-   'search.virginmedia.com' => 'VirginMedia',
-   'search.yahoo.co.jp'     => 'Yahoo Japan',
-   'search.yahoo.com'       => { name => 'Yahoo!', mutex => 'uk.search.yahoo.com' },
-   'search.yahoo.jp'        => 'Yahoo! Japan',
-   'simpatico.ws'           => 'Simpatico IT',
-   'soso.com'               => 'Soso',
-   'suche.fireball.de'      => 'Fireball DE',
-   'suche.web.de'           => 'Suche DE',
-   'suche.t-online.de'      => 'T-Online',
-   'thespider.it'           => 'TheSpider IT',
-   'uk.altavista.com'       => 'Altavista UK',
-   'uk.ask.com'             => 'Ask UK',
-   'uk.search.yahoo.com'    => 'Yahoo! UK',
-   'www.alltheweb.com'      => 'AllTheWeb',
-   'www.ask.com'            => 'Ask dot com',
-   'www.blueyonder.co.uk'   => 'Blueyonder',
-   'www.feedster.com'       => 'Feedster',
-   'www.google.ad'          => 'Google Andorra',
-   'www.google.ae'          => 'Google United Arab Emirates',
-   'www.google.af'          => 'Google Afghanistan',
-   'www.google.ag'          => 'Google Antiqua and Barbuda',
-   'www.google.am'          => 'Google Armenia',
-   'www.google.as'          => 'Google American Samoa',
-   'www.google.at'          => 'Google Austria',
-   'www.google.az'          => 'Google Azerbaijan',
-   'www.google.ba'          => 'Google Bosnia and Herzegovina',
-   'www.google.be'          => 'Google Belgium',
-   'www.google.bg'          => 'Google Bulgaria',
-   'www.google.bi'          => 'Google Burundi',
-   'www.google.biz'         => 'Google dot biz',
-   'www.google.bo'          => 'Google Bolivia',
-   'www.google.bs'          => 'Google Bahamas',
-   'www.google.bz'          => 'Google Belize',
-   'www.google.ca'          => 'Google Canada',
-   'www.google.cc'          => 'Google Cocos Islands',
-   'www.google.cd'          => 'Google Dem Rep of Congo',
-   'www.google.cg'          => 'Google Rep of Congo',
-   'www.google.ch'          => 'Google Switzerland',
-   'www.google.ci'          => 'Google Cote dIvoire',
-   'www.google.cl'          => 'Google Chile',
-   'www.google.cn'          => 'Google China',
-   'www.google.co.at'       => 'Google Austria',
-   'www.google.co.bi'       => 'Google Burundi',
-   'www.google.co.bw'       => 'Google Botswana',
-   'www.google.co.ci'       => 'Google Ivory Coast',
-   'www.google.co.ck'       => 'Google Cook Islands',
-   'www.google.co.cr'       => 'Google Costa Rica',
-   'www.google.co.gg'       => 'Google Guernsey',
-   'www.google.co.gl'       => 'Google Greenland',
-   'www.google.co.gy'       => 'Google Guyana',
-   'www.google.co.hu'       => 'Google Hungary',
-   'www.google.co.id'       => 'Google Indonesia',
-   'www.google.co.il'       => 'Google Israel',
-   'www.google.co.im'       => 'Google Isle of Man',
-   'www.google.co.in'       => 'Google India',
-   'www.google.co.it'       => 'Google Italy',
-   'www.google.co.je'       => 'Google Jersey',
-   'www.google.co.jp'       => 'Google Japan',
-   'www.google.co.ke'       => 'Google Kenya',
-   'www.google.co.kr'       => 'Google South Korea',
-   'www.google.co.ls'       => 'Google Lesotho',
-   'www.google.co.ma'       => 'Google Morocco',
-   'www.google.co.mu'       => 'Google Mauritius',
-   'www.google.co.mw'       => 'Google Malawi',
-   'www.google.co.nz'       => 'Google New Zeland',
-   'www.google.co.pn'       => 'Google Pitcairn Islands',
-   'www.google.co.th'       => 'Google Thailand',
-   'www.google.co.tt'       => 'Google Trinidad and Tobago',
-   'www.google.co.ug'       => 'Google Uganda',
-   'www.google.co.uk'       => 'Google UK',
-   'www.google.co.uz'       => 'Google Uzbekistan',
-   'www.google.co.ve'       => 'Google Venezuela',
-   'www.google.co.vi'       => 'Google US Virgin Islands',
-   'www.google.co.za'       => 'Google	South Africa',
-   'www.google.co.zm'       => 'Google Zambia',
-   'www.google.co.zw'       => 'Google Zimbabwe',
-   'www.google.com'         => 'Google',
-   'www.google.com.af'      => 'Google Afghanistan',
-   'www.google.com.ag'      => 'Google Antiqua and Barbuda',
-   'www.google.com.ai'      => 'Google Anguilla',
-   'www.google.com.ar'      => 'Google Argentina',
-   'www.google.com.au'      => 'Google Australia',
-   'www.google.com.az'      => 'Google Azerbaijan',
-   'www.google.com.bd'      => 'Google Bangladesh',
-   'www.google.com.bh'      => 'Google Bahrain',
-   'www.google.com.bi'      => 'Google Burundi',
-   'www.google.com.bn'      => 'Google Brunei Darussalam',
-   'www.google.com.bo'      => 'Google Bolivia',
-   'www.google.com.br'      => 'Google Brazil',
-   'www.google.com.bs'      => 'Google Bahamas',
-   'www.google.com.bz'      => 'Google Belize',
-   'www.google.com.cn'      => 'Google China',
-   'www.google.com.co'      => 'Google',
-   'www.google.com.cu'      => 'Google Cuba',
-   'www.google.com.do'      => 'Google Dominican Rep',
-   'www.google.com.ec'      => 'Google Ecuador',
-   'www.google.com.eg'      => 'Google Egypt',
-   'www.google.com.et'      => 'Google Ethiopia',
-   'www.google.com.fj'      => 'Google Fiji',
-   'www.google.com.ge'      => 'Google Georgia',
-   'www.google.com.gh'      => 'Google Ghana',
-   'www.google.com.gi'      => 'Google Gibraltar',
-   'www.google.com.gl'      => 'Google Greenland',
-   'www.google.com.gp'      => 'Google Guadeloupe',
-   'www.google.com.gr'      => 'Google Greece',
-   'www.google.com.gt'      => 'Google Guatemala',
-   'www.google.com.gy'      => 'Google Guyana',
-   'www.google.com.hk'      => 'Google Hong Kong',
-   'www.google.com.hn'      => 'Google Honduras',
-   'www.google.com.hr'      => 'Google Croatia',
-   'www.google.com.jm'      => 'Google Jamaica',
-   'www.google.com.jo'      => 'Google Jordan',
-   'www.google.com.kg'      => 'Google Kyrgyzstan',
-   'www.google.com.kh'      => 'Google Cambodia',
-   'www.google.com.ki'      => 'Google Kiribati',
-   'www.google.com.kz'      => 'Google Kazakhstan',
-   'www.google.com.lk'      => 'Google Sri Lanka',
-   'www.google.com.lv'      => 'Google Latvia',
-   'www.google.com.ly'      => 'Google Libya',
-   'www.google.com.mt'      => 'Google Malta',
-   'www.google.com.mu'      => 'Google Mauritius',
-   'www.google.com.mw'      => 'Google Malawi',
-   'www.google.com.mx'      => 'Google Mexico',
-   'www.google.com.my'      => 'Google Malaysia',
-   'www.google.com.na'      => 'Google Namibia',
-   'www.google.com.nf'      => 'Google Norfolk Island',
-   'www.google.com.ng'      => 'Google Nigeria',
-   'www.google.com.ni'      => 'Google Nicaragua',
-   'www.google.com.np'      => 'Google Nepal',
-   'www.google.com.nr'      => 'Google Nauru',
-   'www.google.com.om'      => 'Google Oman',
-   'www.google.com.pa'      => 'Google Panama',
-   'www.google.com.pe'      => 'Google Peru',
-   'www.google.com.ph'      => 'Google Philipines',
-   'www.google.com.pk'      => 'Google Pakistan',
-   'www.google.com.pl'      => 'Google Poland',
-   'www.google.com.pr'      => 'Google Puerto Rico',
-   'www.google.com.pt'      => 'Google Portugal',
-   'www.google.com.py'      => 'Google Paraguay',
-   'www.google.com.qa'      => 'Google',
-   'www.google.com.ru'      => 'Google Russia',
-   'www.google.com.sa'      => 'Google Saudi Arabia',
-   'www.google.com.sb'      => 'Google Solomon Islands',
-   'www.google.com.sc'      => 'Google Seychelles',
-   'www.google.com.sg'      => 'Google Singapore',
-   'www.google.com.sv'      => 'Google El Savador',
-   'www.google.com.tj'      => 'Google Tajikistan',
-   'www.google.com.tr'      => 'Google Turkey',
-   'www.google.com.tt'      => 'Google Trinidad and Tobago',
-   'www.google.com.tw'      => 'Google Taiwan',
-   'www.google.com.uy'      => 'Google Uruguay',
-   'www.google.com.uz'      => 'Google Uzbekistan',
-   'www.google.com.ve'      => 'Google Venezuela',
-   'www.google.com.vi'      => 'Google US Virgin Islands',
-   'www.google.com.vn'      => 'Google Vietnam',
-   'www.google.com.ws'      => 'Google Samoa',
-   'www.google.cz'          => 'Google Czech Rep',
-   'www.google.de'          => 'Google Germany',
-   'www.google.dj'          => 'Google Djubouti',
-   'www.google.dk'          => 'Google Denmark',
-   'www.google.dm'          => 'Google Dominica',
-   'www.google.ec'          => 'Google Ecuador',
-   'www.google.ee'          => 'Google Estonia',
-   'www.google.es'          => 'Google Spain',
-   'www.google.fi'          => 'Google Finland',
-   'www.google.fm'          => 'Google Micronesia',
-   'www.google.fr'          => 'Google France',
-   'www.google.gd'          => 'Google Grenada',
-   'www.google.ge'          => 'Google Georgia',
-   'www.google.gf'          => 'Google French Guiana',
-   'www.google.gg'          => 'Google Guernsey',
-   'www.google.gl'          => 'Google Greenland',
-   'www.google.gm'          => 'Google Gambia',
-   'www.google.gp'          => 'Google Guadeloupe',
-   'www.google.gr'          => 'Google Greece',
-   'www.google.gy'          => 'Google Guyana',
-   'www.google.hk'          => 'Google Hong Kong',
-   'www.google.hn'          => 'Google Honduras',
-   'www.google.hr'          => 'Google Croatia',
-   'www.google.ht'          => 'Google Haiti',
-   'www.google.hu'          => 'Google Hungary',
-   'www.google.ie'          => 'Google Ireland',
-   'www.google.im'          => 'Google Isle of Man',
-   'www.google.in'          => 'Google India',
-   'www.google.info'        => 'Google dot info',
-   'www.google.is'          => 'Google Iceland',
-   'www.google.it'          => 'Google Italy',
-   'www.google.je'          => 'Google Jersey',
-   'www.google.jo'          => 'Google Jordan',
-   'www.google.jobs'        => 'Google dot jobs',
-   'www.google.jp'          => 'Google Japan',
-   'www.google.kg'          => 'Google Kyrgyzstan',
-   'www.google.ki'          => 'Google Kiribati',
-   'www.google.kz'          => 'Google Kazakhstan',
-   'www.google.la'          => 'Google Laos',
-   'www.google.li'          => 'Google Liechtenstein',
-   'www.google.lk'          => 'Google Sri Lanka',
-   'www.google.lt'          => 'Google Lithuania',
-   'www.google.lu'          => 'Google Luxembourg',
-   'www.google.lv'          => 'Google Latvia',
-   'www.google.ma'          => 'Google Morocco',
-   'www.google.md'          => 'Google Moldova',
-   'www.google.mn'          => 'Google Mongolia',
-   'www.google.mobi'        => 'Google dot mobi',
-   'www.google.ms'          => 'Google Montserrat',
-   'www.google.mu'          => 'Google Mauritius',
-   'www.google.mv'          => 'Google Maldives',
-   'www.google.mw'          => 'Google Malawi',
-   'www.google.net'         => 'Google dot net',
-   'www.google.nf'          => 'Google Norfolk Island',
-   'www.google.nl'          => 'Google Netherlands',
-   'www.google.no'          => 'Google Norway',
-   'www.google.nr'          => 'Google Nauru',
-   'www.google.nu'          => 'Google Niue',
-   'www.google.off.ai'      => 'Google Anguilla',
-   'www.google.ph'          => 'Google Philipines',
-   'www.google.pk'          => 'Google Pakistan',
-   'www.google.pl'          => 'Google Poland',
-   'www.google.pn'          => 'Google Pitcairn Islands',
-   'www.google.pr'          => 'Google Puerto Rico',
-   'www.google.pt'          => 'Google Portugal',
-   'www.google.ro'          => 'Google Romania',
-   'www.google.ru'          => 'Google Russia',
-   'www.google.rw'          => 'Google Rwanda',
-   'www.google.sc'          => 'Google Seychelles',
-   'www.google.se'          => 'Google Sweden',
-   'www.google.sg'          => 'Google Singapore',
-   'www.google.sh'          => 'Google Saint Helena',
-   'www.google.si'          => 'Google Slovenia',
-   'www.google.sk'          => 'Google Slovakia',
-   'www.google.sm'          => 'Google San Marino',
-   'www.google.sn'          => 'Google Senegal',
-   'www.google.sr'          => 'Google Suriname',
-   'www.google.st'          => 'Google Sao Tome',
-   'www.google.tk'          => 'Google Tokelau',
-   'www.google.tm'          => 'Google Turkmenistan',
-   'www.google.to'          => 'Google Tonga',
-   'www.google.tp'          => 'Google East Timor',
-   'www.google.tt'          => 'Google Trinidad and Tobago',
-   'www.google.tv'          => 'Google Tuvalu',
-   'www.google.tw'          => 'Google Taiwan',
-   'www.google.ug'          => 'Google Uganda',
-   'www.google.us'          => 'Google US',
-   'www.google.uz'          => 'Google Uzbekistan',
-   'www.google.vg'          => 'Google British Virgin Islands',
-   'www.google.vn'          => 'Google Vietnam',
-   'www.google.vu'          => 'Google Vanuatu',
-   'www.google.ws'          => 'Google Samoa',
-   'www.hotbot.com'         => 'HotBot',
-   'www.mamma.com'          => 'Mamma',
-   'www.megasearching.net'  => 'Megasearching',
-   'www.mirago.co.uk'       => 'Mirago UK',
-   'www.netscape.com'       => 'Netscape',
-   'www.technorati.com'     => 'Technorati',
-   'www.tesco.net'          => 'Tesco Search',
-   'www.tiscali.co.uk'      => 'Tiscali UK',
+   'abacho.com'             => { name => 'Abacho',        q => 'q'},
+   'alice.it'               => { name => 'Alice.it',      q => 'qs' },
+   'altavista.com'          => { name => 'Altavista',     q => 'q' },
+   'aolsearch.aol.com'      => { name => 'AOL Search',    q => 'query' },
+   'as.starware.com'        => { name => 'Starware',      q => 'qry' },
+   'blogs.icerocket.com'    => { name => 'IceRocket',     q => 'q' },
+   'blogsearch.google.com'  => { name => 'Google Blogsearch', q => 'q' },
+   'busca.orange.es'        => { name => 'Orange ES',     q => 'buscar' },
+   'buscador.lycos.es'      => { name => 'Lycos ES',      q => 'query' },
+   'buscador.terra.es'      => { name => 'Terra ES',      q => 'query' },
+   'buscar.ozu.es'          => { name => 'Ozu ES',        q => 'q' },
+   'categorico.it'          => { name => 'Categorico IT', q => 'q' },
+   'cuil.com'               => { name => 'Cuil',          q => 'q' },
+   'excite.com'             => { name => 'Excite',        q => 'q' },
+   'excite.it'              => { name => 'Excite IT',     q => 'q' },
+   'fastweb.it'             => { name => 'Fastweb IT',    q => 'q' },
+   'godado.com'             => { name => 'Godado',        q => 'key' },
+   'godado.it'              => { name => 'Godado (IT)',   q => 'key' },
+   'gps.virgin.net'         => { name => 'Virgin Search', q => 'q' },
+   'ilmotore.com'           => { name => 'ilMotore',      q => 'query' },
+   'ithaki.net'             => { name => 'Ithaki',        q => 'query' },
+   'kataweb.it'             => { name => 'Kataweb IT',    q => 'q' },
+   'libero.it'              => { name => 'Libero IT',     q => 'query' },
+   'lycos.it'               => { name => 'Lycos IT',      q => 'query' },
+   'search.aol.co.uk'       => { name => 'AOL UK',        q => 'query' },
+   'search.arabia.msn.com'  => { name => 'MSN Arabia',    q => 'q' },
+   'search.bbc.co.uk'       => { name => 'BBC Search',    q => 'q' },
+   'search.conduit.com'     => { name => 'Conduit',       q => 'q' },
+   'search.icq.com'         => { name => 'ICQ dot com',   q => 'q' },
+   'search.live.com'        => { name => 'Live.com',      q => 'q' },
+   'search.lycos.co.uk'     => { name => 'Lycos UK',      q => 'query' },
+   'search.lycos.com'       => { name => 'Lycos',         q => 'query' },
+   'search.msn.co.uk'       => { name => 'MSN UK',        q => 'q' },
+   'search.msn.com'         => { name => 'MSN',           q => 'q' },
+   'search.myway.com'       => { name => 'MyWay',         q => 'searchfor' },
+   'search.mywebsearch.com' => { name => 'My Web Search', q => 'searchfor' },
+   'search.ntlworld.com'    => { name => 'NTLWorld',      q => 'q' },
+   'search.orange.co.uk'    => { name => 'Orange Search', q => 'q' },
+   'search.prodigy.msn.com' => { name => 'MSN Prodigy',   q => 'q' },
+   'search.sweetim.com'     => { name => 'Sweetim',       q => 'q' },
+   'search.virginmedia.com' => { name => 'VirginMedia',   q => 'q' },
+   'search.yahoo.co.jp'     => { name => 'Yahoo Japan',   q => 'p' },
+   'search.yahoo.com'       => { name => 'Yahoo!',        q => 'p' },
+   'search.yahoo.jp'        => { name => 'Yahoo! Japan',  q => 'p' },
+   'simpatico.ws'           => { name => 'Simpatico IT',  q => 'query' },
+   'soso.com'               => { name => 'Soso',          q => 'w' },
+   'suche.fireball.de'      => { name => 'Fireball DE',   q => 'query' },
+   'suche.web.de'           => { name => 'Suche DE',      q => 'su' },
+   'suche.t-online.de'      => { name => 'T-Online',      q => 'q' },
+   'thespider.it'           => { name => 'TheSpider IT',  q => 'q' },
+   'uk.altavista.com'       => { name => 'Altavista UK',  q => 'q' },
+   'uk.ask.com'             => { name => 'Ask UK',        q => 'q' },
+   'uk.search.yahoo.com'    => { name => 'Yahoo! UK',     q => 'p' },
+   'alltheweb.com'          => { name => 'AllTheWeb',     q => 'q' },
+   'ask.com'                => { name => 'Ask dot com',   q => 'q' },
+   'blueyonder.co.uk'       => { name => 'Blueyonder',    q => 'q' },
+   'feedster.com'           => { name => 'Feedster',      q => 'q' },
+   'google.ad'              => { name => 'Google Andorra',q => 'q' },
+   'google.ae'              => { name => 'Google United Arab Emirates', q => 'q' },
+   'google.af'              => { name => 'Google Afghanistan',          q => 'q' },
+   'google.ag'              => { name => 'Google Antiqua and Barbuda',  q => 'q' },
+   'google.am'              => { name => 'Google Armenia',              q => 'q' },
+   'google.as'              => { name => 'Google American Samoa',       q => 'q' },
+   'google.at'              => { name => 'Google Austria',    q => 'q' },
+   'google.az'              => { name => 'Google Azerbaijan', q => 'q' },
+   'google.ba'              => { name => 'Google Bosnia and Herzegovina', q => 'q' },
+   'google.be'              => { name => 'Google Belgium', q => 'q' },
+   'google.bg'              => { name => 'Google Bulgaria',q => 'q' },
+   'google.bi'              => { name => 'Google Burundi', q => 'q' },
+   'google.biz'             => { name => 'Google dot biz', q => 'q' },
+   'google.bo'              => { name => 'Google Bolivia', q => 'q' },
+   'google.bs'              => { name => 'Google Bahamas', q => 'q' },
+   'google.bz'              => { name => 'Google Belize',  q => 'q' },
+   'google.ca'              => { name => 'Google Canada',  q => 'q' },
+   'google.cc'              => { name => 'Google Cocos Islands',    q => 'q' },
+   'google.cd'              => { name => 'Google Dem Rep of Congo', q => 'q' },
+   'google.cg'              => { name => 'Google Rep of Congo',     q => 'q' },
+   'google.ch'              => { name => 'Google Switzerland',      q => 'q' },
+   'google.ci'              => { name => 'Google Cote dIvoire',     q => 'q' },
+   'google.cl'              => { name => 'Google Chile',    q => 'q' },
+   'google.cn'              => { name => 'Google China',    q => 'q' },
+   'google.co.at'           => { name => 'Google Austria',  q => 'q' },
+   'google.co.bi'           => { name => 'Google Burundi',  q => 'q' },
+   'google.co.bw'           => { name => 'Google Botswana', q => 'q' },
+   'google.co.ci'           => { name => 'Google Ivory Coast',  q => 'q' },
+   'google.co.ck'           => { name => 'Google Cook Islands', q => 'q' },
+   'google.co.cr'           => { name => 'Google Costa Rica',   q => 'q' },
+   'google.co.gg'           => { name => 'Google Guernsey',     q => 'q' },
+   'google.co.gl'           => { name => 'Google Greenland',    q => 'q' },
+   'google.co.gy'           => { name => 'Google Guyana',       q => 'q' },
+   'google.co.hu'           => { name => 'Google Hungary',      q => 'q' },
+   'google.co.id'           => { name => 'Google Indonesia',    q => 'q' },
+   'google.co.il'           => { name => 'Google Israel',       q => 'q' },
+   'google.co.im'           => { name => 'Google Isle of Man',  q => 'q' },
+   'google.co.in'           => { name => 'Google India',        q => 'q' },
+   'google.co.it'           => { name => 'Google Italy',        q => 'q' },
+   'google.co.je'           => { name => 'Google Jersey',       q => 'q' },
+   'google.co.jp'           => { name => 'Google Japan',        q => 'q' },
+   'google.co.ke'           => { name => 'Google Kenya',        q => 'q' },
+   'google.co.kr'           => { name => 'Google South Korea',  q => 'q' },
+   'google.co.ls'           => { name => 'Google Lesotho',      q => 'q' },
+   'google.co.ma'           => { name => 'Google Morocco',      q => 'q' },
+   'google.co.mu'           => { name => 'Google Mauritius',    q => 'q' },
+   'google.co.mw'           => { name => 'Google Malawi',       q => 'q' },
+   'google.co.nz'           => { name => 'Google New Zeland',   q => 'q' },
+   'google.co.pn'           => { name => 'Google Pitcairn Islands',    q => 'q' },
+   'google.co.th'           => { name => 'Google Thailand',            q => 'q' },
+   'google.co.tt'           => { name => 'Google Trinidad and Tobago', q => 'q' },
+   'google.co.ug'           => { name => 'Google Uganda',       q => 'q' },
+   'google.co.uk'           => { name => 'Google UK',           q => 'q' },
+   'google.co.uz'           => { name => 'Google Uzbekistan',   q => 'q' },
+   'google.co.ve'           => { name => 'Google Venezuela',    q => 'q' },
+   'google.co.vi'           => { name => 'Google US Virgin Islands', q => 'q' },
+   'google.co.za'           => { name => 'Google  South Africa',q => 'q' },
+   'google.co.zm'           => { name => 'Google Zambia',       q => 'q' },
+   'google.co.zw'           => { name => 'Google Zimbabwe',     q => 'q' },
+   'google.com'             => { name => 'Google',              q => 'q' },
+   'google.com.af'          => { name => 'Google Afghanistan',  q => 'q' },
+   'google.com.ag'          => { name => 'Google Antiqua and Barbuda', q => 'q' },
+   'google.com.ai'          => { name => 'Google Anguilla',    q => 'q' },
+   'google.com.ar'          => { name => 'Google Argentina',   q => 'q' },
+   'google.com.au'          => { name => 'Google Australia',   q => 'q' },
+   'google.com.az'          => { name => 'Google Azerbaijan',  q => 'q' },
+   'google.com.bd'          => { name => 'Google Bangladesh',  q => 'q' },
+   'google.com.bh'          => { name => 'Google Bahrain',     q => 'q' },
+   'google.com.bi'          => { name => 'Google Burundi',     q => 'q' },
+   'google.com.bn'          => { name => 'Google Brunei Darussalam', q => 'q' },
+   'google.com.bo'          => { name => 'Google Bolivia',     q => 'q' },
+   'google.com.br'          => { name => 'Google Brazil',      q => 'q' },
+   'google.com.bs'          => { name => 'Google Bahamas',     q => 'q' },
+   'google.com.bz'          => { name => 'Google Belize',      q => 'q' },
+   'google.com.cn'          => { name => 'Google China',       q => 'q' },
+   'google.com.co'          => { name => 'Google',             q => 'q' },
+   'google.com.cu'          => { name => 'Google Cuba',        q => 'q' },
+   'google.com.do'          => { name => 'Google Dominican Rep', q => 'q' },
+   'google.com.ec'          => { name => 'Google Ecuador',     q => 'q' },
+   'google.com.eg'          => { name => 'Google Egypt',       q => 'q' },
+   'google.com.et'          => { name => 'Google Ethiopia',    q => 'q' },
+   'google.com.fj'          => { name => 'Google Fiji',        q => 'q' },
+   'google.com.ge'          => { name => 'Google Georgia',     q => 'q' },
+   'google.com.gh'          => { name => 'Google Ghana',       q => 'q' },
+   'google.com.gi'          => { name => 'Google Gibraltar',   q => 'q' },
+   'google.com.gl'          => { name => 'Google Greenland',   q => 'q' },
+   'google.com.gp'          => { name => 'Google Guadeloupe',  q => 'q' },
+   'google.com.gr'          => { name => 'Google Greece',      q => 'q' },
+   'google.com.gt'          => { name => 'Google Guatemala',   q => 'q' },
+   'google.com.gy'          => { name => 'Google Guyana',      q => 'q' },
+   'google.com.hk'          => { name => 'Google Hong Kong',   q => 'q' },
+   'google.com.hn'          => { name => 'Google Honduras',    q => 'q' },
+   'google.com.hr'          => { name => 'Google Croatia',     q => 'q' },
+   'google.com.jm'          => { name => 'Google Jamaica',     q => 'q' },
+   'google.com.jo'          => { name => 'Google Jordan',      q => 'q' },
+   'google.com.kg'          => { name => 'Google Kyrgyzstan',  q => 'q' },
+   'google.com.kh'          => { name => 'Google Cambodia',    q => 'q' },
+   'google.com.ki'          => { name => 'Google Kiribati',    q => 'q' },
+   'google.com.kz'          => { name => 'Google Kazakhstan',  q => 'q' },
+   'google.com.lk'          => { name => 'Google Sri Lanka',   q => 'q' },
+   'google.com.lv'          => { name => 'Google Latvia',      q => 'q' },
+   'google.com.ly'          => { name => 'Google Libya',       q => 'q' },
+   'google.com.mt'          => { name => 'Google Malta',       q => 'q' },
+   'google.com.mu'          => { name => 'Google Mauritius',   q => 'q' },
+   'google.com.mw'          => { name => 'Google Malawi',      q => 'q' },
+   'google.com.mx'          => { name => 'Google Mexico',      q => 'q' },
+   'google.com.my'          => { name => 'Google Malaysia',    q => 'q' },
+   'google.com.na'          => { name => 'Google Namibia',     q => 'q' },
+   'google.com.nf'          => { name => 'Google Norfolk Island', q => 'q' },
+   'google.com.ng'          => { name => 'Google Nigeria',        q => 'q' },
+   'google.com.ni'          => { name => 'Google Nicaragua',   q => 'q' },
+   'google.com.np'          => { name => 'Google Nepal',       q => 'q' },
+   'google.com.nr'          => { name => 'Google Nauru',       q => 'q' },
+   'google.com.om'          => { name => 'Google Oman',        q => 'q' },
+   'google.com.pa'          => { name => 'Google Panama',      q => 'q' },
+   'google.com.pe'          => { name => 'Google Peru',        q => 'q' },
+   'google.com.ph'          => { name => 'Google Philipines',  q => 'q' },
+   'google.com.pk'          => { name => 'Google Pakistan',    q => 'q' },
+   'google.com.pl'          => { name => 'Google Poland',      q => 'q' },
+   'google.com.pr'          => { name => 'Google Puerto Rico', q => 'q' },
+   'google.com.pt'          => { name => 'Google Portugal',    q => 'q' },
+   'google.com.py'          => { name => 'Google Paraguay',    q => 'q' },
+   'google.com.qa'          => { name => 'Google',             q => 'q' },
+   'google.com.ru'          => { name => 'Google Russia',      q => 'q' },
+   'google.com.sa'          => { name => 'Google Saudi Arabia',    q => 'q' },
+   'google.com.sb'          => { name => 'Google Solomon Islands', q => 'q' },
+   'google.com.sc'          => { name => 'Google Seychelles',      q => 'q' },
+   'google.com.sg'          => { name => 'Google Singapore',   q => 'q' },
+   'google.com.sv'          => { name => 'Google El Savador',  q => 'q' },
+   'google.com.tj'          => { name => 'Google Tajikistan',  q => 'q' },
+   'google.com.tr'          => { name => 'Google Turkey',      q => 'q' },
+   'google.com.tt'          => { name => 'Google Trinidad and Tobago', q => 'q' },
+   'google.com.tw'          => { name => 'Google Taiwan',      q => 'q' },
+   'google.com.uy'          => { name => 'Google Uruguay',     q => 'q' },
+   'google.com.uz'          => { name => 'Google Uzbekistan',  q => 'q' },
+   'google.com.ve'          => { name => 'Google Venezuela',   q => 'q' },
+   'google.com.vi'          => { name => 'Google US Virgin Islands', q => 'q' },
+   'google.com.vn'          => { name => 'Google Vietnam',     q => 'q' },
+   'google.com.ws'          => { name => 'Google Samoa',       q => 'q' },
+   'google.cz'              => { name => 'Google Czech Rep',   q => 'q' },
+   'google.de'              => { name => 'Google Germany',     q => 'q' },
+   'google.dj'              => { name => 'Google Djubouti',    q => 'q' },
+   'google.dk'              => { name => 'Google Denmark',     q => 'q' },
+   'google.dm'              => { name => 'Google Dominica',    q => 'q' },
+   'google.ec'              => { name => 'Google Ecuador',     q => 'q' },
+   'google.ee'              => { name => 'Google Estonia',     q => 'q' },
+   'google.es'              => { name => 'Google Spain',       q => 'q' },
+   'google.fi'              => { name => 'Google Finland',     q => 'q' },
+   'google.fm'              => { name => 'Google Micronesia',  q => 'q' },
+   'google.fr'              => { name => 'Google France',      q => 'q' },
+   'google.gd'              => { name => 'Google Grenada',     q => 'q' },
+   'google.ge'              => { name => 'Google Georgia',     q => 'q' },
+   'google.gf'              => { name => 'Google French Guiana', q => 'q' },
+   'google.gg'              => { name => 'Google Guernsey',      q => 'q' },
+   'google.gl'              => { name => 'Google Greenland',     q => 'q' },
+   'google.gm'              => { name => 'Google Gambia',        q => 'q' },
+   'google.gp'              => { name => 'Google Guadeloupe',    q => 'q' },
+   'google.gr'              => { name => 'Google Greece',        q => 'q' },
+   'google.gy'              => { name => 'Google Guyana',        q => 'q' },
+   'google.hk'              => { name => 'Google Hong Kong',     q => 'q' },
+   'google.hn'              => { name => 'Google Honduras',      q => 'q' },
+   'google.hr'              => { name => 'Google Croatia',       q => 'q' },
+   'google.ht'              => { name => 'Google Haiti',         q => 'q' },
+   'google.hu'              => { name => 'Google Hungary',       q => 'q' },
+   'google.ie'              => { name => 'Google Ireland',       q => 'q' },
+   'google.im'              => { name => 'Google Isle of Man',   q => 'q' },
+   'google.in'              => { name => 'Google India',         q => 'q' },
+   'google.info'            => { name => 'Google dot info',      q => 'q' },
+   'google.is'              => { name => 'Google Iceland',       q => 'q' },
+   'google.it'              => { name => 'Google Italy',         q => 'q' },
+   'google.je'              => { name => 'Google Jersey',        q => 'q' },
+   'google.jo'              => { name => 'Google Jordan',        q => 'q' },
+   'google.jobs'            => { name => 'Google dot jobs',      q => 'q' },
+   'google.jp'              => { name => 'Google Japan',         q => 'q' },
+   'google.kg'              => { name => 'Google Kyrgyzstan',    q => 'q' },
+   'google.ki'              => { name => 'Google Kiribati',      q => 'q' },
+   'google.kz'              => { name => 'Google Kazakhstan',    q => 'q' },
+   'google.la'              => { name => 'Google Laos',          q => 'q' },
+   'google.li'              => { name => 'Google Liechtenstein', q => 'q' },
+   'google.lk'              => { name => 'Google Sri Lanka',     q => 'q' },
+   'google.lt'              => { name => 'Google Lithuania',     q => 'q' },
+   'google.lu'              => { name => 'Google Luxembourg',    q => 'q' },
+   'google.lv'              => { name => 'Google Latvia',        q => 'q' },
+   'google.ma'              => { name => 'Google Morocco',       q => 'q' },
+   'google.md'              => { name => 'Google Moldova',       q => 'q' },
+   'google.mn'              => { name => 'Google Mongolia',      q => 'q' },
+   'google.mobi'            => { name => 'Google dot mobi',      q => 'q' },
+   'google.ms'              => { name => 'Google Montserrat',    q => 'q' },
+   'google.mu'              => { name => 'Google Mauritius',     q => 'q' },
+   'google.mv'              => { name => 'Google Maldives',      q => 'q' },
+   'google.mw'              => { name => 'Google Malawi',        q => 'q' },
+   'google.net'             => { name => 'Google dot net',       q => 'q' },
+   'google.nf'              => { name => 'Google Norfolk Island', q => 'q' },
+   'google.nl'              => { name => 'Google Netherlands',    q => 'q' },
+   'google.no'              => { name => 'Google Norway',        q => 'q' },
+   'google.nr'              => { name => 'Google Nauru',         q => 'q' },
+   'google.nu'              => { name => 'Google Niue',          q => 'q' },
+   'google.off.ai'          => { name => 'Google Anguilla',      q => 'q' },
+   'google.ph'              => { name => 'Google Philipines',    q => 'q' },
+   'google.pk'              => { name => 'Google Pakistan',      q => 'q' },
+   'google.pl'              => { name => 'Google Poland',        q => 'q' },
+   'google.pn'              => { name => 'Google Pitcairn Islands', q => 'q' },
+   'google.pr'              => { name => 'Google Puerto Rico',   q => 'q' },
+   'google.pt'              => { name => 'Google Portugal',      q => 'q' },
+   'google.ro'              => { name => 'Google Romania',       q => 'q' },
+   'google.ru'              => { name => 'Google Russia',        q => 'q' },
+   'google.rw'              => { name => 'Google Rwanda',        q => 'q' },
+   'google.sc'              => { name => 'Google Seychelles',    q => 'q' },
+   'google.se'              => { name => 'Google Sweden',        q => 'q' },
+   'google.sg'              => { name => 'Google Singapore',     q => 'q' },
+   'google.sh'              => { name => 'Google Saint Helena',  q => 'q' },
+   'google.si'              => { name => 'Google Slovenia',      q => 'q' },
+   'google.sk'              => { name => 'Google Slovakia',      q => 'q' },
+   'google.sm'              => { name => 'Google San Marino',    q => 'q' },
+   'google.sn'              => { name => 'Google Senegal',       q => 'q' },
+   'google.sr'              => { name => 'Google Suriname',      q => 'q' },
+   'google.st'              => { name => 'Google Sao Tome',      q => 'q' },
+   'google.tk'              => { name => 'Google Tokelau',       q => 'q' },
+   'google.tm'              => { name => 'Google Turkmenistan',  q => 'q' },
+   'google.to'              => { name => 'Google Tonga',        q => 'q' },
+   'google.tp'              => { name => 'Google East Timor',   q => 'q' },
+   'google.tt'              => { name => 'Google Trinidad and Tobago', q => 'q' },
+   'google.tv'              => { name => 'Google Tuvalu', q => 'q' },
+   'google.tw'              => { name => 'Google Taiwan', q => 'q' },
+   'google.ug'              => { name => 'Google Uganda', q => 'q' },
+   'google.us'              => { name => 'Google US',     q => 'q' },
+   'google.uz'              => { name => 'Google Uzbekistan',             q => 'q' },
+   'google.vg'              => { name => 'Google British Virgin Islands', q => 'q' },
+   'google.vn'              => { name => 'Google Vietnam', q => 'q' },
+   'google.vu'              => { name => 'Google Vanuatu', q => 'q' },
+   'google.ws'              => { name => 'Google Samoa',  q => 'q' },
+   'hotbot.com'             => { name => 'HotBot',        q => 'query' },
+   'mamma.com'              => { name => 'Mamma',         q => 'query' },
+   'mahalo.com'             => { name => 'Mahalo',        q => 'search' },
+   'megasearching.net'      => { name => 'Megasearching', q => 's' },
+   'mirago.co.uk'           => { name => 'Mirago UK',     q => 'qry' },
+   'netscape.com'           => { name => 'Netscape',      q => 's' },
+   'community.paglo.com'    => { name => 'Paglo',         q => 'q' },
+   'sproose.com'            => { name => 'Sproose',       q => 'query' },
+   'technorati.com'         => { name => 'Technorati',    q => 'q' },
+   'tesco.net'              => { name => 'Tesco Search',  q => 'q' },
+   'tiscali.co.uk'          => { name => 'Tiscali UK',    q => 'query' },
 };
 
 sub new {
@@ -355,8 +354,7 @@ sub new {
 
 This module provides a simple function to parse and extract search engine query strings. It was designed and tested having
 Apache referrer logs in mind. It can be used for a wide number of purposes, including tracking down what keywords people use
-on popular search engines before they land on a site. It makes use of URI::split to extract the string and URI::Escape to un-escape
-the encoded characters in it.	Although a number of existing modules and scripts exist for this purpose,
+on popular search engines before they land on a site. Although a number of existing modules and scripts exist for this purpose,
 the majority of them are either outdated using obsolete search strings associated with each engine.
 
 The default function exported is "parse_search_string" which accepts an unquoted referrer string as input and returns the 
@@ -365,15 +363,17 @@ terms before returning them in the latter case. The function returns undef in al
 
 for example: 
 
-   $string = 
-      $uparse->parse_search_string('http://www.google.com/search?hl=en&q=a+simple+test&btnG=Google+Search');
+   my $ref   = 'http://www.google.com/search?hl=en&q=a+simple+test&btnG=Google+Search';
+   my $terms = 
+      $uparse->parse_search_string( $ref );
 
 would return I<'a simple test'>
 
 whereas
 
-   $string = 
-      $uparse->parse_search_string('http://www.mamma.com/Mamma?utfout=1&qtype=0&query=a+more%21+complex_+search%24&Submit=%C2%A0%C2%A0Search%C2%A0%C2%A0');
+   my $ref   = 'http://www.mamma.com/Mamma?utfout=1&qtype=0&query=a+more%21+complex_+search%24&Submit=%C2%A0%C2%A0Search%C2%A0%C2%A0';
+   my $terms =  
+      $uparse->parse_search_string( $terms );
 
 would return I<'a more! complex_ search$'> 
 
@@ -472,6 +472,9 @@ B<Libero (IT)>
 B<Mamma>
 
 =item *
+B<Mahalo>
+
+=item *
 B<Megasearching.net>
 
 =item *
@@ -502,6 +505,9 @@ B<Orange>
 B<Ozu ES>
 
 =item *
+B<Paglo>
+
+=item *
 B<Starware>
 
 =item *
@@ -512,6 +518,9 @@ B<Simpatico (IT)>
 
 =item *
 B<Soso>
+
+=item *
+B<Sproose>
 
 =item *
 B<T-Online DE>
@@ -554,221 +563,128 @@ Same as parse_search_string().
 =cut
 
 sub se_term {
-  my $self = shift ;
+  my $self   = shift ;
   my $string = shift ;
-  
   return unless defined $string ;
   return $self->parse_search_string($string) ;
-    
 }
 
-sub parse_search_string {
-  my $self = shift ;
-  
-	my $string = shift ;
-	return unless defined $string ; 
+## internal method for creating a URI object
 
-	my $query_string ;
-
-	my ($scheme, $auth, $path, $query, $frag) = URI::Split::uri_split($string);
-	undef $scheme; undef  $frag ;
-	
-	return unless defined $auth ;
-
-	# parse technorati and feedster search strings.
-	if ($auth =~ m/(technorati|feedster)\.com/i ) {
-		$path =~ s/\/search\///g ;
-		my $query_string = $path ;
-		$query_string = uri_unescape($query_string);
-		undef $path ;
-		$query_string =~ s/\+/ /g ;
-		return $query_string ;
-	}
-	
-	return unless defined $query ;
-	undef $path ;
-	
-	# parse Google , Ozu.es
-	if ( ($auth =~ m/^www.google\./i) ) {
-	  	$query =~ m/\&q=([^&]+)/i || $query =~ m/q=([^&]+)/i ; ;
-	  	  return unless defined $1 ;
-  	    $query_string = $1 ;
-  }
-  	
-	# parse MSN, Altavista, Blueyonder, AllTheWeb, Tesco and Ice Rocket search strings.
-	if ($auth =~ m/(.altavista.|sweetim.com|alltheweb.com|^search.msn.co|.ask.com|search.bbc.co.uk|search.live.com|search.virginmedia.com|search.prodigy.msn.com)/i 
-	|| $auth =~ m/(suche.t-online.de|fastweb.it|cuil.com|categorico.it|search.abacho.com|www.excite.|kataweb.it|thespider.it|search.icq.com|blueyonder.co.uk|search.conduit.com|blogs.icerocket.com|blogsearch.google.com|froogle.google.co|tesco.net|gps.virgin.net|search.ntlworld.com|search.orange.co.uk|search.arabia.msn.com)/i ) {
-		$query =~ m/q=([^&]+)/i ;
-	    $query_string = $1 ;
-	}
-
-   # ozu.es
-	if ($auth =~ m/(.ozu.es)/i ) {
-		 $query =~ m/\&q=([^&]+)/i ;
-	    $query_string = $1 ;
-	}
-		
-	# parse Lycos, HotBot and Fireball.de search strings.
-	elsif ($auth =~ m/(simpatico.ws|libero.it|ithaki.net|ilmotore.com|lycos.es|terra.es|search.lycos.|hotbot.co|suche.fireball.de|aolsearch.aol.com|lycos.it)/i ) {
-		$query =~ m/query=([^&]+)/i ;
-	    $query_string = $1 ;
-	}
-
-   # parse mywebsearch.com 
-	elsif ($auth =~ m/(godado.(it|com))/i ) {
-		$query =~ m/key=([^&]+)/i ;
-	    $query_string = $1 ;
-	}	
-	
-	# parse mywebsearch.com 
-	elsif ($auth =~ m/(search.mywebsearch.com)/i ) {
-		$query =~ m/searchfor=([^&]+)/i ;
-	    $query_string = $1 ;
-	}
-	
-	# parse Yahoo search strings.
-	elsif ($auth =~ m/search.yahoo/i) {
-		$query =~ m/p=([^&]+)/i ;
-	    $query_string = $1 ;
-	}
-	
-	# parse Soso.com
-	
-	elsif ($auth =~ m/soso.com/i) {
-		$query =~ m/w=([^&]+)/i ;
-	    $query_string = $1 ;
-	}
-	
-	# parse megasearching.net
-	elsif ($auth =~ m/megasearching.net/i) {
-		$query =~ m/s=([^&]+)/i ;
-	    $query_string = $1 ;
-	}
-	
-	# parse Mirago search strings.
-	elsif ($auth =~ m/www.mirago.co.uk/i) {
-		$query =~ m/qry=([^&]+)/i ;
-	    $query_string = $1 ;
-	}
-		
-	# parse Alice.it
-   elsif ($auth =~ m/alice.it/i) {
-		$query =~ m/qs=([^&]+)/i ;
-	    $query_string = $1 ;
-	}		
-		
-	# parse Netscape search strings.
-	elsif ($auth =~ m/www.netscape.com/i ) {
-		$query =~ m/s=([^&]+)/i ;
-	    $query_string = $1 ;
-	}
-	
-	# parse Web.de search string.
-	elsif ($auth =~ m/suche.web.de/i ) {
-		$query =~ m/su=([^&]+)/i ;
-	    $query_string = $1 ;
-	}
-
-	# parse Orange.es search string.
-	elsif ($auth =~ m/orange.es/i ) {
-		$query =~ m/buscar=([^&]+)/i ;
-	    $query_string = $1 ;
-	}
-
-   # parse Orange.es search string.
-	elsif ($auth =~ m/.myway.com/i ) {
-		$query =~ m/searchfor=([^&]+)/i ;
-	    $query_string = $1 ;
-	}
-		
-	# parse Mamma, AOL UK, Tiscali  search strings.
-	elsif ($auth =~ m/(mamma.com|search.aol.co.uk|tiscali.co.uk)/i ) {
-		$query =~ m/query=([^&]+)/i ;
-	    $query_string = $1 ;
-	}		
-	
-  # parse starware search strings
-  elsif ( $auth =~ m/as.starware.com/i ) {
-    $query =~ m/qry=([^&]+)/i ;
-     $query_string = $1 ;
-  }
-  
-  if ( defined($query_string) ) {
-     $query_string =~ s/\+/ /g ;
-     $query_string = uri_unescape($query_string);
-     return $query_string
-   }
+sub _uri {
+   my $self   = shift;
+   my $string = shift;
    
-  return undef;
-  
+   return unless defined($string);
+   
+   ## create a new URI object
+	## and return unless its http or https
+	
+	my $uri = URI->new( $string );
+	return 
+	   unless (defined($uri) 
+	       && (ref($uri) eq 'URI::http' || ref($uri) eq 'URI::https'));
+	
+	## feedster and technorati as they do not follow
+	## the usual search patterns thus we extract the query
+	## terms by taking the last element from the path segments
+	
+	if ( $uri->host =~ m/(feedster|technorati)\.com$/ ){
+	   $uri->query_form( q => ( $uri->path_segments)[-1]);
+	}
+
+	## clean up the host until it matches
+	## something we already know about
+	
+	while( ! defined $self->{'engines'}{ $uri->host }) {
+       my @host_parts = split /\./, $uri->host;
+       splice( @host_parts, 0, 1 );
+       if(@host_parts <= 1) {
+          last;
+       }
+       $uri->host(join '.', @host_parts );
+    }
+	return $uri;
+}
+
+
+sub parse_search_string {
+   my $self   = shift ;
+   my $string = shift ;
+	return unless defined($string); 
+	
+	my $uri = $self->_uri( $string );
+	return unless defined($uri);
+	
+	## get rid of the www
+	my $host = $uri->host;
+	$host =~ m!^www\.!;
+	
+	## find the query parameter the engine uses
+	my $q = $self->{'engines'}{$host}{'q'};
+	return unless defined $q;
+	
+	## return the string passed to the query parameter
+	my %h_query = $uri->query_form;
+	return $h_query{$q}
 }
 
 =head2 findEngine
 
- Returns the search engine hostname and name extracted by the supplied referrer URL.
-  
-  my $engine = 
-     $uparse->findEngine('http://www.google.com/search?hl=en&q=a+simple+test&btnG=Google+Search') ;
- 
-This will return "google.com" as the search engine hostname and 'Google' as the name.
-Currently supports 231 Google TLD's & all the above mentioned search engines.
+Returns a list with the hostname of the search engine as the first element and 
+the canonical name as the second element.
+
+  my $ref = 'http://www.google.com/search?hl=en&q=a+simple+test&btnG=Google+Search';
+  my ($hostname, $canonical) = $uparse->findEngine( $ref ) ;
+
+This will return 'google.com' as the search engine hostname and 'Google' as the name.
+This function will return I<undef> on error.
 
 =cut
 
 sub findEngine {
   my $self    = shift ;
-  my $ref_str = shift ;
-
-  return unless defined $ref_str;
-  
-  foreach my $e ( keys %{$self->{engines}} ) {
-    
-     my $name = $self->{engines}->{$e};
-     
-     if ( ref($self->{engines}->{$e}) eq 'HASH' ) {
-        $name = $self->{engines}->{$e}->{name};
-     }
-         
-     if ( $ref_str =~ m@\b$e\b@i ) {
-        
-        if ( ref($self->{engines}->{$e}) eq 'HASH' 
-             && $self->{engines}->{$e}->{mutex}
-         )  {
-            next if ( $ref_str =~ m!$self->{engines}->{$e}->{mutex}!i );
-         }
+  my $string  = shift ;
  
-        $e =~ s!www.!!;
-        return ($e, $name);
-     }     
- }
+  return unless defined($string);
   
-  return ;
+  ## create a URI object
+  
+  my $uri = $self->_uri( $string );
+  return unless defined($uri);
+	
+  my $hostname = $uri->host;
+  my $canonical = $self->{'engines'}->{$hostname}->{'name'};
+	
+  return ($hostname,$canonical);
 }
 
 =head2 se_host 
 
-Wrapper around findEngine. Returns the search engine hostname.
+Wrapper around findEngine - returns just the hostname.
+This function will return I<undef> on error.
 
 =cut
 
 sub se_host {
-  my $self = shift ;
+  my $self   = shift ;
   my $string = shift ;
-  return unless defined $string ;
+  return unless defined($string) ;
   my ($host,$name) = $self->findEngine($string) ;
   return $host ;
 }
 
 =head2 se_name
 
-Wrapper around findEngine. Returns the search engine canonical name.
+Wrapper around findEngine - returns just the canonical name;
+This function will return I<undef> on error.
 
 =cut
 
 sub se_name {
-  my $self = shift ;
+  my $self   = shift ;
   my $string = shift ;
-  return unless defined $string ;
+  return unless defined($string);
   my ($host,$name) = $self->findEngine($string) ;
   return $name ;
 }
