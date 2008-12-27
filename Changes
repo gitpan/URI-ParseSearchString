@@ -38,3 +38,4 @@ Revision history for URI-ParseSearchString
         -- added Paglo
         -- added Mahalo
         -- added Sproose
+2.9     Added URI as a prereq as it appears some systems get confused.

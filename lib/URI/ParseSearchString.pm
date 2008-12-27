@@ -14,11 +14,11 @@ URI::ParseSearchString - parse search engine referrer URLs and extract keywords 
 
 =head1 VERSION
 
-Version 2.8  (Lich king edition)
+Version 2.9  (I-got-an-epic mount edition)
 
 =cut
 
-our $VERSION = '2.8';
+our $VERSION = '2.9';
 
 =head1 SYNOPSIS
 
