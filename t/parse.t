@@ -1,7 +1,7 @@
 use strict;
 use warnings ;
 
-use Test::More tests => 369;
+use Test::More tests => 373;
 use Test::NoWarnings;
 
 use_ok('URI::ParseSearchString') ;
@@ -10,6 +10,7 @@ my $obj = new URI::ParseSearchString() ;
 isa_ok($obj, 'URI::ParseSearchString');
 
 my $raa_simpleTests = [
+   ['http://www.google.co.uk/url?hl=en&q=a+simple+test&btnG=Google+Search&meta=&aq=f&oq=a+simple+tes',    'Google.com simple search', 'google.co.uk' ], # new style ref string
    ['http://www.google.com/search?hl=en&q=a+simple+test&btnG=Google+Search',                                  'Google.com simple search', 'google.com', ],
    ['http://www.google.co.uk/search?hl=en&q=a+simple+test&btnG=Google+Search&meta=',                          'Google.co.uk simple search', 'google.co.uk',  ],
    ['http://www.google.co.jp/search?hl=ja&q=a+simple+test&btnG=Google+%E6%A4%9C%E7%B4%A2&lr=',                'Google.jp encoding simple search', 'google.co.jp' ],

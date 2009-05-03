@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               URI-ParseSearchString
-version:            2.9
+version:            3.0
 abstract:           parse search engine referrer URLs and extract keywords used
 author:
     - Spiros Denaxas <spiros@lokku.com>
@@ -16,7 +16,7 @@ no_index:
     directory:
         - t
         - inc
-generated_by:       ExtUtils::MakeMaker version 6.46
+generated_by:       ExtUtils::MakeMaker version 6.48
 meta-spec:
     url:      http://module-build.sourceforge.net/META-spec-v1.4.html
     version:  1.4
