@@ -1,7 +1,7 @@
 use strict;
 use warnings ;
 
-use Test::More tests => 373;
+use Test::More tests => 377;
 use Test::NoWarnings;
 
 use_ok('URI::ParseSearchString') ;
@@ -79,6 +79,7 @@ my $raa_simpleTests = [
    ['http://suche.t-online.de/fast-cgi/tsc?q=a+simple+test&encQuery=haus+in+lichtenau+bei+karlshuld+&x=0&y=0&lang=any&mandant=toi&device=html&portallanguage=de&userlanguage=de&dia=suche&context=internet-tab&tpc=internet&ptl=std&classification=internet-tab_internet_std&start=0&num=10&ocr=yes&type=all&sb=top&more=none', 'T-Online', 'suche.t-online.de'],
    ['https://community.paglo.com/search?q=a+simple+test&x=0&y=0', 'Paglo', 'community.paglo.com' ],
    ['http://mahalo.com/Special:Search?search=a+simple+test&go=Search', 'Mahalo', 'mahalo.com'],
+   ['http://www.bing.com/search?q=a+simple+test&go=&form=QBLH&filt=all', 'Bing', 'bing.com'],
    ['http://www.sproose.com/search?query=a+simple+test&searchLanguage=en', 'Sproose', 'sproose.com']
 ] ;
 

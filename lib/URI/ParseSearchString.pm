@@ -14,11 +14,11 @@ URI::ParseSearchString - parse search engine referrer URLs and extract keywords 
 
 =head1 VERSION
 
-Version 3.0  (tooth ache version)
+Version 3.1  (more tooth ache version)
 
 =cut
 
-our $VERSION = '3.0';
+our $VERSION = '3.1';
 
 =head1 SYNOPSIS
 
@@ -341,6 +341,7 @@ my $RH_LOOKUPS = {
    'technorati.com'         => { name => 'Technorati',    q => 'q' },
    'tesco.net'              => { name => 'Tesco Search',  q => 'q' },
    'tiscali.co.uk'          => { name => 'Tiscali UK',    q => 'query' },
+   'bing.com'               => { name => 'Bing',          q => 'q' },
 };
 
 sub new {

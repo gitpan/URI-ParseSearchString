@@ -40,3 +40,4 @@ Revision history for URI-ParseSearchString
         -- added Sproose
 2.9     Added URI as a prereq as it appears some systems get confused.
 3.0     Added a test case for the new Google referrer strings (http://tinyurl.com/dz5mtu)
+3.1     Added MS Bing support (thanks Mark!)
