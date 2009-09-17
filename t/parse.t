@@ -1,7 +1,7 @@
 use strict;
 use warnings ;
 
-use Test::More tests => 377;
+use Test::More tests => 381;
 use Test::NoWarnings;
 
 use_ok('URI::ParseSearchString') ;
@@ -80,7 +80,9 @@ my $raa_simpleTests = [
    ['https://community.paglo.com/search?q=a+simple+test&x=0&y=0', 'Paglo', 'community.paglo.com' ],
    ['http://mahalo.com/Special:Search?search=a+simple+test&go=Search', 'Mahalo', 'mahalo.com'],
    ['http://www.bing.com/search?q=a+simple+test&go=&form=QBLH&filt=all', 'Bing', 'bing.com'],
-   ['http://www.sproose.com/search?query=a+simple+test&searchLanguage=en', 'Sproose', 'sproose.com']
+   ['http://www.sproose.com/search?query=a+simple+test&searchLanguage=en', 'Sproose', 'sproose.com'],
+   [ 'http://fastbrowsersearch.com/results/results.aspx?q=a+simple+test&s=homepage&tid=&v=', 'Fastbrowsersearch', 'fastbrowsersearch.com'],
+   
 ] ;
 
 my $raa_complexTests = [

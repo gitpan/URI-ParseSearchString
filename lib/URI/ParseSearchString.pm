@@ -14,11 +14,11 @@ URI::ParseSearchString - parse search engine referrer URLs and extract keywords 
 
 =head1 VERSION
 
-Version 3.1  (more tooth ache version)
+Version 3.2  (need more holidays version)
 
 =cut
 
-our $VERSION = '3.1';
+our $VERSION = '3.2';
 
 =head1 SYNOPSIS
 
@@ -42,6 +42,29 @@ our $VERSION = '3.1';
 =cut
 
 my $RH_LOOKUPS = {
+    
+    'answers.yahoo.com'     => { name => 'Yahoo Answers', q=>'p' },
+    
+   'sapo.pt'                => { name => 'Pesquisa SAPO', q => 'q'},
+   'iol.pt'                 => { name => 'Pesquisa Iol',  q => 'q'},
+   'pesquisa.clix.pt'       => { name => 'Pesquisa Clix', q => 'question'},
+   'aeiou.pt'               => { name => 'Aeiou',         q => 'q'},
+
+	
+   'fotos.sapo.pt'          => { name => 'SAPO fotos',    q => 'word'},
+   'videos.sapo.pt'         => { name => 'SAPO videos',   q => 'word'},
+   'sabores.sapo.pt'        => { name => 'SAPO sabores',  q => 'cxSearch'},
+   'jn.sapo.pt'             => { name => 'Jornal Noticias', q => 'Pesquisa'},
+   'dn.sapo.pt'             => { name => 'Diario Noticias', q => 'Pesquisa'},
+	
+	
+   'rtp.pt'                 => { name => 'Rtp',           q => 'search'},
+   'record.pt'              => { name => 'Jornal Record', q => 'q'},
+   'correiodamanha.pt'      => { name => 'Correio da Manha',        q => 'pesquisa'},
+   'correiomanha.pt'        => { name => 'Correio Manha',        q => 'pesquisa'},
+   'publico.clix.pt'        => { name => 'Publico',       q => 'q'},
+   'xl.pt'                  => { name => 'XL',            q => 'pesquisa'},
+        
    'abacho.com'             => { name => 'Abacho',        q => 'q'},
    'alice.it'               => { name => 'Alice.it',      q => 'qs' },
    'altavista.com'          => { name => 'Altavista',     q => 'q' },
@@ -58,6 +81,7 @@ my $RH_LOOKUPS = {
    'excite.com'             => { name => 'Excite',        q => 'q' },
    'excite.it'              => { name => 'Excite IT',     q => 'q' },
    'fastweb.it'             => { name => 'Fastweb IT',    q => 'q' },
+   'fastbrowsersearch.com'  => { name => 'Fastbrowsersearch', q=> 'q' },
    'godado.com'             => { name => 'Godado',        q => 'key' },
    'godado.it'              => { name => 'Godado (IT)',   q => 'key' },
    'gps.virgin.net'         => { name => 'Virgin Search', q => 'q' },
@@ -378,182 +402,15 @@ whereas
 
 would return I<'a more! complex_ search$'> 
 
-Currently supported search engines include:
-
-=over
-
-=item *
-B<Abacho>
-
-=item *
-B<AOL (UK)>
-
-=item *
-B<AOLSEARCH>
-
-=item *
-B<AllTheWeb>
-
-=item *
-B<ASK.com>
-
-=item *
-B<Blueyonder (UK)>
-
-=item *
-B<BBC search>
-
-=item *
-B<Categorico (IT)>
-
-=item *
-B<Conduit>
-
-=item *
-B<Cuil>
-
-=item *
-B<Fastweb IT>
-
-=item *
-B<Feedster Blog Search>
-
-=item * 
-B<Fireball (DE)>
-
-=item *
-B<Froogle>
-
-=item *
-B<Froogle (UK)>
-
-=item *
-B<Google & 231 other TLD's>
-
-=item *
-B<Google Blog Search>
-
-=item *
-B<Godado>
-
-=item *
-B<Godado (IT)>
-
-=item *
-B<HotBot>
-
-=item * 
-B<Ice Rocket Blog Search>
-
-=item *
-B<ICQ.com>
-
-=item *
-B<ilMotore.com>
-
-=item *
-B<Ithaki.net>
-
-=item *
-B<Kataweb (IT)>
-
-=item *
-B<Lycos>
-
-=item * 
-B<Lycos (ES)>
-
-=item *
-B<Lycos (IT)>
-
-=item *
-B<Libero (IT)>
-
-=item *
-B<Mamma>
-
-=item *
-B<Mahalo>
-
-=item *
-B<Megasearching.net>
-
-=item *
-B<Mirago (UK)>
-
-=item *
-B<MyWebSearch.com>
-
-=item *
-B<MSN>
-
-=item *
-B<Microsoft live.com>
-
-=item *
-B<MyWay>
-
-=item *
-B<Netscape>
-
-=item *
-B<NTLworld>
-
-=item *
-B<Orange>
-
-=item *
-B<Ozu ES>
-
-=item *
-B<Paglo>
-
-=item *
-B<Starware>
-
-=item *
-B<Sweetim>
-
-=item *
-B<Simpatico (IT)>
-
-=item *
-B<Soso>
-
-=item *
-B<Sproose>
-
-=item *
-B<T-Online DE>
-
-=item *
-B<Technorati Blog Search>
-
-=item * 
-B<Tesco Google search>
-
-=item *
-B<Terra (ES)>
-
-=item *
-B<Tiscali (UK)>
-
-=item *
-B<TheSpider (IT)>
-
-=item *
-B<VirginMedia>
-
-=item *
-B<Web.de (DE)>
-
-=item *
-B<Yahoo>
-
-=item *
-B<Yahoo Japan>
-
-=back
+Currently supported search engines include: Abacho, Aeiou PT,
+AOL UK, AOLSEARCH, AllTheWeb, Ask.com, Blueyonder UK, BBC, Categorico IT, 
+Conduit, Correiomanha PT, Cuil, Clix PT, FastWeb IT, Feedster, Fireball DE, Froogle, Froogle UK, Google,
+Google blog search, Godado, HotBot, Iol PT, Ice Rocket, ICQ.com, ilMotore.com, Ithaki,
+Kataweb IT, Lycos, Lycos ES, Lycos IT, Libero IT, Mamma, Mahalo, MSN, Mirago,
+Megasearching.net, MyWebSearch.com, MSN, MS live.com, MyWay, Netscape, NTLWorld,
+Orange, Oze ES, Paglo, Rtp PT, Record PT, Sapo PT, Starware, Sweetim, Simpatico IT, Soso, Sproose, T-Online DE,
+Technorati, Tesco search, Terra ES, Tiscali UK, TheSpider IT, Virgin Media,
+Web.de DE, XL PT, Yahoo, Yahoo Answers, Yahoo Japan.
 
 =cut
 
@@ -590,22 +447,23 @@ sub _uri {
 	## the usual search patterns thus we extract the query
 	## terms by taking the last element from the path segments
 	
-	if ( $uri->host =~ m/(feedster|technorati)\.com$/ ){
+    my $host = $uri->host;
+    
+	if ( $host =~ m/(feedster|technorati)\.com$/ ){
 	   $uri->query_form( q => ( $uri->path_segments)[-1]);
 	}
 
 	## clean up the host until it matches
 	## something we already know about
 	
-	while( ! defined $self->{'engines'}{ $uri->host }) {
-       my @host_parts = split /\./, $uri->host;
-       splice( @host_parts, 0, 1 );
-       if(@host_parts <= 1) {
-          last;
-       }
-       $uri->host(join '.', @host_parts );
+	 while( ! defined $self->{'engines'}{ $host }){
+        my $c = index($host, '.');
+        last if $c <0;
+        $host= substr($host, $c+1);
     }
-	return $uri;
+
+    return ($uri, $host);
+    
 }
 
 
@@ -614,11 +472,10 @@ sub parse_search_string {
    my $string = shift ;
 	return unless defined($string); 
 	
-	my $uri = $self->_uri( $string );
+	my ($uri,$host) = $self->_uri( $string );
 	return unless defined($uri);
 	
 	## get rid of the www
-	my $host = $uri->host;
 	$host =~ m!^www\.!;
 	
 	## find the query parameter the engine uses
@@ -651,10 +508,9 @@ sub findEngine {
   
   ## create a URI object
   
-  my $uri = $self->_uri( $string );
+  my ($uri,$hostname) = $self->_uri( $string );
   return unless defined($uri);
 	
-  my $hostname = $uri->host;
   my $canonical = $self->{'engines'}->{$hostname}->{'name'};
 	
   return ($hostname,$canonical);

@@ -41,3 +41,8 @@ Revision history for URI-ParseSearchString
 2.9     Added URI as a prereq as it appears some systems get confused.
 3.0     Added a test case for the new Google referrer strings (http://tinyurl.com/dz5mtu)
 3.1     Added MS Bing support (thanks Mark!)
+3.2     Added MS Bing to list of engines (forgot to to so at v. 3.1)
+        Added Sapo from Portugal (Thanks Fransisco) and about 10 more .pt engines and newspapers : Iol, Clix, Aeiou, Rpt, Record, Correiomanha and XL
+        Some improvements over speed (Thanks once more Fransisco)
+        Replaced big engine list with a flat one, easier to read.
+        Added fastbrowsersearch.com and Yahoo answers.
