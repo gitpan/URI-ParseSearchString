@@ -14,11 +14,11 @@ URI::ParseSearchString - parse search engine referrer URLs and extract keywords 
 
 =head1 VERSION
 
-Version 3.2  (need more holidays version)
+Version 3.3  (back to reality version)
 
 =cut
 
-our $VERSION = '3.2';
+our $VERSION = '3.3';
 
 =head1 SYNOPSIS
 
@@ -550,6 +550,10 @@ sub se_name {
 
 Spiros Denaxas, C<< <s.denaxas at gmail.com> >>
 
+=head1 SOURCE CODE
+
+This module has its own project page now on Google Code L<http://code.google.com/p/perl-uri-parsesearchstring/>
+
 =head1 BUGS
 
 This is my first CPAN module so I encourage you to send all comments, especially bad, 
@@ -570,7 +574,7 @@ For more information, you could also visit my blog:
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2008 Spiros Denaxas, all rights reserved.
+Copyright 2010 Spiros Denaxas, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
