@@ -47,3 +47,4 @@ Revision history for URI-ParseSearchString
         Replaced big engine list with a flat one, easier to read.
         Added fastbrowsersearch.com and Yahoo answers.
 3.3     No code changes, just POD. Added code to Google code.
+3.3     Added Clusty, In GR, Robby GR, Pathfinder GR, Phantis GR search engines.

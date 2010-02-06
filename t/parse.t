@@ -1,7 +1,7 @@
 use strict;
 use warnings ;
 
-use Test::More tests => 381;
+use Test::More tests => 401;
 use Test::NoWarnings;
 
 use_ok('URI::ParseSearchString') ;
@@ -82,6 +82,11 @@ my $raa_simpleTests = [
    ['http://www.bing.com/search?q=a+simple+test&go=&form=QBLH&filt=all', 'Bing', 'bing.com'],
    ['http://www.sproose.com/search?query=a+simple+test&searchLanguage=en', 'Sproose', 'sproose.com'],
    [ 'http://fastbrowsersearch.com/results/results.aspx?q=a+simple+test&s=homepage&tid=&v=', 'Fastbrowsersearch', 'fastbrowsersearch.com'],
+   [ 'http://clusty.com/search?input-form=clusty-simple&v%3Asources=webplus&query=a+simple+test', 'Clusty', 'clusty.com' ],
+   [ 'http://find.in.gr/result.asp?src=0&q=a%20simple%20test', 'In GR', 'in.gr' ],
+   [ 'http://www.robby.gr/search.pl?lang=english&searchstr=a+simple+test&submit=Search&topic=greece', 'Robby GR', 'robby.gr' ],
+   [ 'http://search.pathfinder.gr/?q=a%20simple%20test', 'Pathfinder GR', 'pathfinder.gr' ],
+   [ 'http://world.phantis.com/spade.get?q=a+simple+test&cs=iso8859-7', 'Phantis GR', 'phantis.com' ],
    
 ] ;
 

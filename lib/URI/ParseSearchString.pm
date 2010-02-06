@@ -14,11 +14,11 @@ URI::ParseSearchString - parse search engine referrer URLs and extract keywords 
 
 =head1 VERSION
 
-Version 3.3  (back to reality version)
+Version 3.4  (Agrotiko version)
 
 =cut
 
-our $VERSION = '3.3';
+our $VERSION = '3.4';
 
 =head1 SYNOPSIS
 
@@ -78,6 +78,7 @@ my $RH_LOOKUPS = {
    'buscar.ozu.es'          => { name => 'Ozu ES',        q => 'q' },
    'categorico.it'          => { name => 'Categorico IT', q => 'q' },
    'cuil.com'               => { name => 'Cuil',          q => 'q' },
+   'clusty.com'             => { name => 'Clusty',        q => 'query' },
    'excite.com'             => { name => 'Excite',        q => 'q' },
    'excite.it'              => { name => 'Excite IT',     q => 'q' },
    'fastweb.it'             => { name => 'Fastweb IT',    q => 'q' },
@@ -355,12 +356,16 @@ my $RH_LOOKUPS = {
    'google.vu'              => { name => 'Google Vanuatu', q => 'q' },
    'google.ws'              => { name => 'Google Samoa',  q => 'q' },
    'hotbot.com'             => { name => 'HotBot',        q => 'query' },
+   'in.gr'                  => { name => 'In GR',         q => 'q' },
    'mamma.com'              => { name => 'Mamma',         q => 'query' },
    'mahalo.com'             => { name => 'Mahalo',        q => 'search' },
    'megasearching.net'      => { name => 'Megasearching', q => 's' },
    'mirago.co.uk'           => { name => 'Mirago UK',     q => 'qry' },
    'netscape.com'           => { name => 'Netscape',      q => 's' },
    'community.paglo.com'    => { name => 'Paglo',         q => 'q' },
+   'pathfinder.gr'          => { name => 'Pathfinder GR', q => 'q' },
+   'phantis.com'            => { name => 'Phantis GR' ,   q => 'q'},
+   'robby.gr'               => { name => 'Robby GR'     , q => 'searchstr' },
    'sproose.com'            => { name => 'Sproose',       q => 'query' },
    'technorati.com'         => { name => 'Technorati',    q => 'q' },
    'tesco.net'              => { name => 'Tesco Search',  q => 'q' },
@@ -404,11 +409,11 @@ would return I<'a more! complex_ search$'>
 
 Currently supported search engines include: Abacho, Aeiou PT,
 AOL UK, AOLSEARCH, AllTheWeb, Ask.com, Blueyonder UK, BBC, Categorico IT, 
-Conduit, Correiomanha PT, Cuil, Clix PT, FastWeb IT, Feedster, Fireball DE, Froogle, Froogle UK, Google,
-Google blog search, Godado, HotBot, Iol PT, Ice Rocket, ICQ.com, ilMotore.com, Ithaki,
+Conduit, Correiomanha PT, Cuil, Clix PT, Clusty, FastWeb IT, Feedster, Fireball DE, Froogle, Froogle UK, Google,
+Google blog search, Godado, HotBot, In GR, Iol PT, Ice Rocket, ICQ.com, ilMotore.com, Ithaki,
 Kataweb IT, Lycos, Lycos ES, Lycos IT, Libero IT, Mamma, Mahalo, MSN, Mirago,
 Megasearching.net, MyWebSearch.com, MSN, MS live.com, MyWay, Netscape, NTLWorld,
-Orange, Oze ES, Paglo, Rtp PT, Record PT, Sapo PT, Starware, Sweetim, Simpatico IT, Soso, Sproose, T-Online DE,
+Orange, Oze ES, Paglo, Rtp PT, Robby GR, Phantis GR, Pathfinder GR, Record PT, Sapo PT, Starware, Sweetim, Simpatico IT, Soso, Sproose, T-Online DE,
 Technorati, Tesco search, Terra ES, Tiscali UK, TheSpider IT, Virgin Media,
 Web.de DE, XL PT, Yahoo, Yahoo Answers, Yahoo Japan.
 
