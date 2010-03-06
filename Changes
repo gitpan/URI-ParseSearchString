@@ -48,3 +48,5 @@ Revision history for URI-ParseSearchString
         Added fastbrowsersearch.com and Yahoo answers.
 3.3     No code changes, just POD. Added code to Google code.
 3.3     Added Clusty, In GR, Robby GR, Pathfinder GR, Phantis GR search engines.
+3.4     Fixed POD issue (thanks mtm!)
+3.41    Added Google Ukraine (UA) in the list of Google domains (thanks beho)

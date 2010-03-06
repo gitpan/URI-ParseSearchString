@@ -7,6 +7,7 @@ require Exporter;
 use warnings;
 use strict;
 use URI;
+use Data::Dumper;
 
 =head1 NAME
 
@@ -14,11 +15,11 @@ URI::ParseSearchString - parse search engine referrer URLs and extract keywords 
 
 =head1 VERSION
 
-Version 3.4  (Agrotiko version)
+Version 3.41  (Greek economy version)
 
 =cut
 
-our $VERSION = '3.4';
+our $VERSION = '3.41';
 
 =head1 SYNOPSIS
 
@@ -257,6 +258,7 @@ my $RH_LOOKUPS = {
    'google.com.tr'          => { name => 'Google Turkey',      q => 'q' },
    'google.com.tt'          => { name => 'Google Trinidad and Tobago', q => 'q' },
    'google.com.tw'          => { name => 'Google Taiwan',      q => 'q' },
+   'google.com.ua'          => { name => 'Google Ukraine',      q => 'q' },
    'google.com.uy'          => { name => 'Google Uruguay',     q => 'q' },
    'google.com.uz'          => { name => 'Google Uzbekistan',  q => 'q' },
    'google.com.ve'          => { name => 'Google Venezuela',   q => 'q' },
@@ -403,7 +405,7 @@ whereas
 
    my $ref   = 'http://www.mamma.com/Mamma?utfout=1&qtype=0&query=a+more%21+complex_+search%24&Submit=%C2%A0%C2%A0Search%C2%A0%C2%A0';
    my $terms =  
-      $uparse->parse_search_string( $terms );
+      $uparse->parse_search_string( $ref );
 
 would return I<'a more! complex_ search$'> 
 
@@ -454,7 +456,7 @@ sub _uri {
 	
     my $host = $uri->host;
     
-	if ( $host =~ m/(feedster|technorati)\.com$/ ){
+   if ( $host =~ m/(feedster|technorati)\.com$/ ){
 	   $uri->query_form( q => ( $uri->path_segments)[-1]);
 	}
 
@@ -482,13 +484,14 @@ sub parse_search_string {
 	
 	## get rid of the www
 	$host =~ m!^www\.!;
-	
+		
 	## find the query parameter the engine uses
 	my $q = $self->{'engines'}{$host}{'q'};
 	return unless defined $q;
 	
 	## return the string passed to the query parameter
 	my %h_query = $uri->query_form;
+	
 	return $h_query{$q}
 }
 
