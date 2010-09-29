@@ -15,11 +15,11 @@ URI::ParseSearchString - parse search engine referrer URLs and extract keywords 
 
 =head1 VERSION
 
-Version 3.41  (Greek economy version)
+Version 3.42  (Minecraft version)
 
 =cut
 
-our $VERSION = '3.41';
+our $VERSION = '3.42';
 
 =head1 SYNOPSIS
 
@@ -373,6 +373,27 @@ my $RH_LOOKUPS = {
    'tesco.net'              => { name => 'Tesco Search',  q => 'q' },
    'tiscali.co.uk'          => { name => 'Tiscali UK',    q => 'query' },
    'bing.com'               => { name => 'Bing',          q => 'q' },
+   
+   'acbusca.com'            => { name => 'ACBusca',          q => 'query' },
+   'atalhocerto.com.br'     => { name => 'Atalho Certo',     q => 'keyword' },
+   'bastaclicar.com.br'     => { name => 'Basta Clicar',     q => 'search' },
+   'bemrapido.com.br'       => { name => 'Bem Rapido',       q => 'chave' },
+   'br.altavista.com'       => { name => 'AltaVista Brasil', q => 'q' },
+   'br.search.yahoo.com'    => { name => 'Yahoo Brazil',     q => 'p' },
+   'busca.uol.com.br'       => { name => 'Radar UOL',        q => 'q' },
+   'buscaaqui.com.br'       => { name => 'Busca Aqui',       q => 'q' },
+   'buscador.terra.com.br'  => { name => 'Terra Busca',      q => 'query' },
+   'cade.search.yahoo.com'  => { name => 'Cadê',             q => 'p' },
+   'clickgratis.com.br'     => { name => 'Click Gratis',     q => 'query' },
+   'entrada.com.br'         => { name => 'Entrada',          q => 'q' },
+   'gigabusca.com.br'       => { name => 'Giga Busca',       q => 'what' },
+   'internetica.com.br'     => { name => 'Internetica',      q => 'busca' },
+   'katatudo.com.br'        => { name => 'KataTudo',         q => 'q' },
+   'minasplanet.com.br'     => { name => 'Minas Planet',     q => 'term' },
+   'speedybusca.com.br'     => { name => 'SpeedyBusca',      q => 'q' },
+   'vaibuscar.com.br'       => { name => 'Vai Busca',        q => 'q' },
+   
+   
 };
 
 sub new {
@@ -409,15 +430,44 @@ whereas
 
 would return I<'a more! complex_ search$'> 
 
-Currently supported search engines include: Abacho, Aeiou PT,
-AOL UK, AOLSEARCH, AllTheWeb, Ask.com, Blueyonder UK, BBC, Categorico IT, 
-Conduit, Correiomanha PT, Cuil, Clix PT, Clusty, FastWeb IT, Feedster, Fireball DE, Froogle, Froogle UK, Google,
-Google blog search, Godado, HotBot, In GR, Iol PT, Ice Rocket, ICQ.com, ilMotore.com, Ithaki,
-Kataweb IT, Lycos, Lycos ES, Lycos IT, Libero IT, Mamma, Mahalo, MSN, Mirago,
-Megasearching.net, MyWebSearch.com, MSN, MS live.com, MyWay, Netscape, NTLWorld,
-Orange, Oze ES, Paglo, Rtp PT, Robby GR, Phantis GR, Pathfinder GR, Record PT, Sapo PT, Starware, Sweetim, Simpatico IT, Soso, Sproose, T-Online DE,
-Technorati, Tesco search, Terra ES, Tiscali UK, TheSpider IT, Virgin Media,
-Web.de DE, XL PT, Yahoo, Yahoo Answers, Yahoo Japan.
+Currently supported search engines include: Sproose, Google Namibia, Google Ivory Coast, Google Oman, Technorati, Google Ecuador, 
+Google Norfolk Island, Mahalo, Google UK, Yahoo! UK, Google Micronesia, Google Bahrain, Basta Clicar, 
+Giga Busca, Google Greece, Google Belgium, Google Egypt, Google Chile, Godado (IT), Google Australia, 
+Google Uruguay, Google India, Google Taiwan, Google Ukraine, Google US, Terra ES, 
+Tesco Search, Megasearching, SAPO videos, Google Nepal, Google Israel, Google US Virgin Islands, Google Hungary, 
+Google San Marino, Google Croatia, Google dot jobs, Google Panama, Google Malaysia, Internetica, Google Brunei Darussalam,
+Google Denmark, Google Pakistan, Google Solomon Islands, Google dot biz, Google Lesotho, IceRocket, Google Greenland, Fireball DE,
+Rtp, Google Portugal, Google Samoa, Google Kazakhstan, Google Blogsearch, Google Thailand, Google, Google Antiqua and Barbuda, 
+Google Germany, Google Moldova, Google Zambia, Google Greece, Google Sri Lanka, Google Ireland, Google Austria, 
+Google Peru, Google Guatemala, ICQ dot com, AOL UK, Google Guyana, In GR, Google dot info, MyWay, Pathfinder GR, Google Costa Rica, 
+KataTudo, Google Jamaica, Google Vietnam, Google Morocco, Google Gambia, Google Singapore, Google Mauritius, Altavista, Google Afghanistan, 
+Google Cote dIvoire, Google Kazakhstan, Google Czech Rep, Phantis GR, Google Bahamas, Google United Arab Emirates, Google East Timor, Ozu ES,
+Google Venezuela, Google Puerto Rico, Google Armenia, Google Croatia, Google Botswana, Google Tuvalu, Ask UK, Google Singapore, Mirago UK, 
+Google Greenland, MSN Arabia, Google Nauru, Publico, Robby GR, Minas Planet, Pesquisa Iol, Google Romania, Google South Korea, Google Jersey,
+Netscape, Busca Aqui, Google Bulgaria, Google Uzbekistan, Tiscali UK, Ithaki, Cadê, Lycos IT, Google Suriname, Excite IT, Google Hong Kong, 
+Kataweb IT, Google Burundi, Click Gratis, Google Vietnam, MSN, Alice.it, Google Honduras, Google Trinidad and Tobago, Google Uganda, XL, 
+Jornal Noticias, Google Cook Islands, Google Japan, Google Ecuador, Google Ghana, Google Guadeloupe, Google Libya, Google Kenya, Fastbrowsersearch, 
+Aeiou, Google Niue, Jornal Record, HotBot, Google Honduras, Google Georgia, Google Fiji, Google Philipines, BBC Search, Google, Google Laos, 
+Soso, AltaVista Brasil, Lycos UK, SAPO fotos, Ask dot com, Google Netherlands, Google Philipines, Google Trinidad and Tobago, Google Turkey, 
+AllTheWeb, Google Japan, Google Argentina, Google Vanuatu, Blueyonder, Google Greenland, Google Samoa, Google Georgia, Google Slovakia, 
+Google Sri Lanka, Pesquisa SAPO, Google Latvia, Google Latvia, Correio Manha, Terra Busca, Google El Savador, Google Cambodia, 
+Google Mauritius, Google China, AOL Search, Google Tokelau, Google Tonga, Correio da Manha, Radar UOL, Google Jordan, Godado, Google Jordan, 
+Google Pitcairn Islands, Categorico IT, Google Morocco, Google Dominican Rep, Google France, Abacho, Google Azerbaijan, Google Andorra, Google Belize, 
+Google Paraguay, Simpatico IT, Google Ethiopia, Google Uganda, Google Poland, Google Bolivia, Google Hungary, Google Russia, Diario Noticias, 
+Google Puerto Rico, Google Montserrat, Yahoo! Japan, Google Seychelles, Mamma, Google Pitcairn Islands, Google  South Africa, Paglo, Google Malta, 
+Google Azerbaijan, Google New Zeland, Google China, Google Norway, Google Bosnia and Herzegovina, Google Indonesia, SpeedyBusca, Entrada, Google Anguilla, 
+Google Rep of Congo, Google Dominica, Google Finland, Altavista UK, Google Guyana, MSN UK, Yahoo Answers, Google British Virgin Islands, Google Guadeloupe,
+Google Lithuania, Google Antiqua and Barbuda, Google Bahamas, Google Malawi, MSN Prodigy, Bing, Google Bolivia, Google Djubouti, Google Uzbekistan, Fastweb IT, 
+Google Tajikistan, Virgin Search, Google Nigeria, Yahoo Japan, Pesquisa Clix, Google Grenada, Google Haiti, Google American Samoa, Google Pakistan, 
+Google Cocos Islands, Google Hong Kong, NTLWorld, ilMotore, Google Belize, Google Guernsey, Google Sweden, Google Anguilla, Google Bangladesh, Google Isle of Man, 
+Google Guernsey, Google Kyrgyzstan, Google Dem Rep of Congo, Google Malawi, Orange Search, Google Seychelles, Google Guyana, Google Gibraltar, 
+oogle Italy, Google Kiribati, TheSpider IT, Google Nicaragua, Google Russia, Google Venezuela, Google Poland, Google Brazil, Google Senegal, Conduit, Lycos, 
+Google Isle of Man, Live.com, Google Italy, Libero IT, Google Canada, Google Nauru, Google Liechtenstein, Google Afghanistan, Cuil, Google Zimbabwe, Google Mauritius, 
+Orange ES, Google Burundi, Google Portugal, ACBusca, Bem Rapido, Atalho Certo, Excite, Clusty, Yahoo Brazil, My Web Search, Google Spain, Google Uzbekistan, Google,
+Google Mexico, T-Online, Google dot mobi, Google Luxembourg, Google Austria, Yahoo!, Google Kiribati, Sweetim, Vai Busca, Google Mongolia, Google Saudi Arabia, Google dot net,
+Google Maldives, Google Trinidad and Tobago, Google Jersey, Feedster, Google Turkmenistan, Google Switzerland, Google Norfolk Island, Suche DE, Google Malawi, Google Rwanda, 
+Lycos ES, Google Burundi, Google French Guiana, Google Kyrgyzstan, Google Saint Helena, VirginMedia, Google Iceland, SAPO sabores, Google India, Google Cuba, 
+Google US Virgin Islands, Google Taiwan, Google Sao Tome, Google Slovenia, Starware, Google Estonia
 
 =cut
 

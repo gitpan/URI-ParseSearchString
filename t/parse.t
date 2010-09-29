@@ -1,7 +1,7 @@
 use strict;
 use warnings ;
 
-use Test::More tests => 405;
+use Test::More tests => 477;
 use Test::NoWarnings;
 
 use_ok('URI::ParseSearchString') ;
@@ -88,6 +88,25 @@ my $raa_simpleTests = [
     [ 'http://search.pathfinder.gr/?q=a%20simple%20test', 'Pathfinder GR', 'pathfinder.gr' ],
     [ 'http://world.phantis.com/spade.get?q=a+simple+test&cs=iso8859-7', 'Phantis GR', 'phantis.com' ],
    [ 'http://www.google.com.ua/search?hl=uk&source=hp&q=a+simple+test&btnG=Пошук+Google&meta=&aq=f&oq=', 'Google UA', 'google.com.ua' ],
+   [ 'http://www.acbusca.com/busca?query=a+simple+test&ss=Procurar&meta=all',    'ACBusca', 'acbusca.com' ],
+   [ 'http://atalhocerto.com.br/parking.php?ses=Y3JlPTEyODU2ODY0MjcmdGNpZD1hdGFsaG9jZXJ0by5jb20uYnI0Y2EyMDQ5YTFlNjViNC41MjkyMTEzNSZma2k9MTUwNDc1MjMyJnRhc2s9c2VhcmNoJmRvbWFpbj1hdGFsaG9jZXJ0by5jb20uYnImcz1mMWYyNWViMjQxOTZjMzk1MTNiOSZsYW5ndWFnZT1lbiZwZ3Q9R1ZMRXRmMlc4VVlLRXdpWmpQR1ZzNnFrQWhYUGhOOEtIWFl0aktBWUFDQUFPREJBcUx5UDM1X2p0djR0JmFncz03RGZhMVhYUmlzUUtFd2laalBHVnM2cWtBaFhQaE44S0hYWXRqS0FZQXlBQU9EQkFxTHlQMzVfanR2NHQmYV9pZD0xJnRyYWNrcXVlcnk9MQ%3D%3D&token=7Dfa1XXRisQKEwiZjPGVs6qkAhXPhN8KHXYtjKAYAyAAODBAqLyP35_jtv4t&keyword=a+simple+test',   'atalhocerto', 'atalhocerto.com.br' ],
+   [ 'http://bastaclicar.com.br/search.asp?search=a+simple+test&destino=1',   'Basta Clicar', 'bastaclicar.com.br' ],
+   [ 'http://bemrapido.com.br/engine.php?chave=a+simple+test', 'Bem   Rapido', 'bemrapido.com.br' ],
+   [ 'http://br.altavista.com/web/results?fr=altavista&itag=ody&q=a+simple+test&kgs=1&kls=0',   'AltaVista Brasil', 'br.altavista.com' ],
+   [ 'http://br.search.yahoo.com/search?vc=&p=a+simple+test&toggle=1&cop=mss&ei=UTF-8&fr=yfp-t-707',   'Yahoo Brazil', 'br.search.yahoo.com' ],
+   [ 'http://mundo.busca.uol.com.br/buscar.html?q=a+simple+test&ad=on',   'Radar UOL', 'busca.uol.com.br' ],
+   [ 'http://www.buscaaqui.com.br/meta/busca.php?cx=014464830400903769598:fvcs3xxfjn8&cof=FORID:9&ie=UTF-8&q=a+simple+test&sa=Pesquisar',
+   'Busca Aqui', 'buscaaqui.com.br' ],
+   [ 'http://buscador.terra.com.br/Default.aspx?source=Search&ca=s&query=a%20simple%20test',   'Terra Busca', 'buscador.terra.com.br' ],
+   [ 'http://cade.search.yahoo.com/search;_ylt=A0oG749bBaJMrTABlIDa7Qt.;_ylc=X1MDMjE0MjQ3ODk0OARfcgMyBGZyA3NmcARuX2dwcwM1BG9yaWdpbgNzeWMEcXVlcnkDYSBzaW1wbGUgdGVzdARzYW8DMQ--?p=a+simple+test&fr=sfp&fr2=&iscqry=',   'Cadê', 'cade.search.yahoo.com' ],
+   [ 'http://www.clickgratis.com.br/links/index.php?query=a+simple+test',   'Click Gratis', 'clickgratis.com.br' ],   [ 'http://entrada.com.br/busca.asp?q=a+simple+test&d=entrada.com.br&qs=06oENya4ZG1YS6vOLJwpLiFdjG9zxAJmLXwvTu2iPjK6Hygucd3wEEdFF99h2IeJhmNgoo36JFx9uDdDLFIqPee5LPG_vsfzqpaK0Twzq7mNfLqIi3txEaymklZWrNIH8k0zcw-pkv34SCXoLJgQr70khTrh_kDbBRBdy2G1rzPFdUoeszfwxmtKn7neQAHdXxZdolAjVKt0nEcxjGiEkmLVzGhUxjN4o4m9X3VrLcmAVnlm6S41D9-l5rSP5b53MlrR9BzVK1my7zl4ll-vteAUnqrS4XgKCUO9BkmFYGCZpRdMk4,YT0z',   'Entrada', 'entrada.com.br' ],
+   [ 'http://www.gigabusca.com.br/search.php?what=a+simple+test&search_top=',   'Giga Busca', 'gigabusca.com.br' ],
+   [ 'http://internetica.com.br/busca.asp?co=BR&busca=a+simple+test&imageField2.x=0&imageField2.y=0',   'Internetica', 'internetica.com.br' ],
+   [ 'http://www.katatudo.com.br/busca/busca.php?base=web&tag=KATATUDO&layout_sel=layout_simples&tema_sel=padrao&q=a+simple+test',   'KataTudo', 'katatudo.com.br' ],
+   [ 'http://minasplanet.com.br/index.php?term=a+simple+test&req=search&category=0&contain=all&find=similar&Submit=Procurar',   'Minas Planet', 'minasplanet.com.br' ],
+   [ 'http://speedybusca.com.br/busca.php?cx=008561444203672047661:hmm5kbhjfoa&cof=FORID:9&mode=allwords&q=a+simple+test&botao.x=0&botao.y=0&botao=Buscar&pesquisar=portugues',   'SpeedyBusca', 'speedybusca.com.br' ],
+   [ 'http://vaibuscar.com.br/buscar.asp?q=a+simple+test&submeter=++++Buscar++++',   'Vai Busca', 'vaibuscar.com.br' ],
+   
    
 ] ;
 

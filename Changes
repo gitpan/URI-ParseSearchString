@@ -50,3 +50,4 @@ Revision history for URI-ParseSearchString
 3.3     Added Clusty, In GR, Robby GR, Pathfinder GR, Phantis GR search engines.
 3.4     Fixed POD issue (thanks mtm!)
 3.41    Added Google Ukraine (UA) in the list of Google domains (thanks beho)
+3.42    Added Brazilian search engines (Thanks Alex)
