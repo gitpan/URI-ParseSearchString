@@ -1,7 +1,7 @@
 use strict;
 use warnings ;
 
-use Test::More tests => 477;
+use Test::More tests => 481;
 use Test::NoWarnings;
 
 use_ok('URI::ParseSearchString') ;
@@ -106,7 +106,7 @@ my $raa_simpleTests = [
    [ 'http://minasplanet.com.br/index.php?term=a+simple+test&req=search&category=0&contain=all&find=similar&Submit=Procurar',   'Minas Planet', 'minasplanet.com.br' ],
    [ 'http://speedybusca.com.br/busca.php?cx=008561444203672047661:hmm5kbhjfoa&cof=FORID:9&mode=allwords&q=a+simple+test&botao.x=0&botao.y=0&botao=Buscar&pesquisar=portugues',   'SpeedyBusca', 'speedybusca.com.br' ],
    [ 'http://vaibuscar.com.br/buscar.asp?q=a+simple+test&submeter=++++Buscar++++',   'Vai Busca', 'vaibuscar.com.br' ],
-   
+   [ 'http://search.conduit.com/Results.aspx?q=a+simple+test&meta=all&hl=en&gl=uk&SelfSearch=1&SearchSourceOrigin=32&ctid=WEBSITE', 'Conduit', 'search.conduit.com', ]
    
 ] ;
 
