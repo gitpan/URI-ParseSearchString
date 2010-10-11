@@ -1,7 +1,7 @@
 use strict;
 use warnings ;
 
-use Test::More tests => 481;
+use Test::More tests => 493;
 use Test::NoWarnings;
 
 use_ok('URI::ParseSearchString') ;
@@ -106,7 +106,11 @@ my $raa_simpleTests = [
    [ 'http://minasplanet.com.br/index.php?term=a+simple+test&req=search&category=0&contain=all&find=similar&Submit=Procurar',   'Minas Planet', 'minasplanet.com.br' ],
    [ 'http://speedybusca.com.br/busca.php?cx=008561444203672047661:hmm5kbhjfoa&cof=FORID:9&mode=allwords&q=a+simple+test&botao.x=0&botao.y=0&botao=Buscar&pesquisar=portugues',   'SpeedyBusca', 'speedybusca.com.br' ],
    [ 'http://vaibuscar.com.br/buscar.asp?q=a+simple+test&submeter=++++Buscar++++',   'Vai Busca', 'vaibuscar.com.br' ],
-   [ 'http://search.conduit.com/Results.aspx?q=a+simple+test&meta=all&hl=en&gl=uk&SelfSearch=1&SearchSourceOrigin=32&ctid=WEBSITE', 'Conduit', 'search.conduit.com', ]
+   [ 'http://search.conduit.com/Results.aspx?q=a+simple+test&meta=all&hl=en&gl=uk&SelfSearch=1&SearchSourceOrigin=32&ctid=WEBSITE', 'Conduit', 'search.conduit.com', ],
+   [ 'http://in.search.yahoo.com/search;_ylt=A0oG75Wz6K5M6WoANuu6HAx.;_ylc=X1MDMjE0MjQ3ODk0OARfcgMyBGZyA3NmcARuX2dwcwM1BG9yaWdpbgNzeWMEcXVlcnkDYSBzaW1wbGUgdGVzdARzYW8DMQ--?p=a+simple+test&fr=sfp&fr2=&iscqry=',   'Yahoo India', 'in.search.yahoo.com' ],
+  [ 'http://search1.rediff.com/dirsrch/default.asp?src=web&MT=a%20simple%20test',   'Rediff', 'rediff.com' ],
+  [ 'http://www.guruji.com/search?hl=en&q=a+simple+test&sb=1',   'Guruji', 'guruji.com' ],
+   
    
 ] ;
 

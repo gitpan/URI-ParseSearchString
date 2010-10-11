@@ -15,11 +15,11 @@ URI::ParseSearchString - parse search engine referrer URLs and extract keywords 
 
 =head1 VERSION
 
-Version 3.43  (Minecraft edition)
+Version 3.44  (Minecraft edition)
 
 =cut
 
-our $VERSION = '3.43';
+our $VERSION = '3.44';
 
 =head1 SYNOPSIS
 
@@ -394,6 +394,9 @@ my $RH_LOOKUPS = {
    'vaibuscar.com.br'       => { name => 'Vai Busca',        q => 'q' },
    
    'search.conduit.com'     => { name => 'Conduit',          q=>'q'   },
+   'in.search.yahoo.com'    => { name => 'Yahoo India',      q => 'p'  },
+   'rediff.com'             => { name => 'Rediff',           q => 'MT' },
+   'guruji.com'             => { name => 'Guruji',           q => 'q'  },
    
    
 };
@@ -606,7 +609,7 @@ Orange ES, Google Burundi, Google Portugal, ACBusca, Bem Rapido, Atalho Certo, E
 Google Mexico, T-Online, Google dot mobi, Google Luxembourg, Google Austria, Yahoo!, Google Kiribati, Sweetim, Vai Busca, Google Mongolia, Google Saudi Arabia, Google dot net,
 Google Maldives, Google Trinidad and Tobago, Google Jersey, Feedster, Google Turkmenistan, Google Switzerland, Google Norfolk Island, Suche DE, Google Malawi, Google Rwanda, 
 Lycos ES, Google Burundi, Google French Guiana, Google Kyrgyzstan, Google Saint Helena, VirginMedia, Google Iceland, SAPO sabores, Google India, Google Cuba, 
-Google US Virgin Islands, Google Taiwan, Google Sao Tome, Google Slovenia, Starware, Google Estonia, Conduit
+Google US Virgin Islands, Google Taiwan, Google Sao Tome, Google Slovenia, Starware, Google Estonia, Conduit, Yahoo India, Rediff, Guruji
 
 =head1 AUTHOR
 
