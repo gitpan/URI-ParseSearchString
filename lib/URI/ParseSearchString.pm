@@ -15,11 +15,11 @@ URI::ParseSearchString - parse search engine referrer URLs and extract keywords 
 
 =head1 VERSION
 
-Version 3.44  (Minecraft edition)
+Version 3.441  (Minecraft edition)
 
 =cut
 
-our $VERSION = '3.44';
+our $VERSION = '3.441';
 
 =head1 SYNOPSIS
 
@@ -617,7 +617,7 @@ Spiros Denaxas, C<< <s.denaxas at gmail.com> >>
 
 =head1 SOURCE CODE
 
-This module has its own project page now on Google Code L<http://code.google.com/p/perl-uri-parsesearchstring/>
+The source code can be found on github L<https://github.com/spiros/URI-ParseSearchString>
 
 =head1 BUGS
 
@@ -639,7 +639,7 @@ For more information, you could also visit my blog:
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2010 Spiros Denaxas, all rights reserved.
+Copyright 2011 Spiros Denaxas, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
