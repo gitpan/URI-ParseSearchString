@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               URI-ParseSearchString
-version:            3.441
+version:            3.442
 abstract:           parse search engine referrer URLs and extract keywords used
 author:
     - Spiros Denaxas <spiros@lokku.com>
